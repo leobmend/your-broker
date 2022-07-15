@@ -1,0 +1,19 @@
+{
+  "name": "your-broker",
+  "version": "1.0.0",
+  "description": "Your Broker",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leobmend/your-broker.git"
+  },
+  "author": "leobmend",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leobmend/your-broker/issues"
+  },
+  "homepage": "https://github.com/leobmend/your-broker#readme",
+}
