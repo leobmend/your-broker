@@ -4,7 +4,7 @@
   "description": "Your Broker",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "db:reset": "npx tsc && npx sequelize-cli db:drop && npx sequelize-cli db:create"
   },
   "repository": {
     "type": "git",
@@ -16,4 +16,26 @@
     "url": "https://github.com/leobmend/your-broker/issues"
   },
   "homepage": "https://github.com/leobmend/your-broker#readme",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.21.3"
+  },
+  "devDependencies": {
+    "@tsconfig/node16": "^1.0.3",
+    "@types/node": "^18.0.4",
+    "@types/sequelize": "^4.28.14",
+    "@typescript-eslint/eslint-plugin": "^5.30.6",
+    "@typescript-eslint/parser": "^5.30.6",
+    "eslint": "^8.19.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-sonarjs": "^0.13.0",
+    "mysql2": "^2.3.3",
+    "nodemon": "^2.0.19",
+    "sequelize-cli": "^6.4.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.4"
+  }
 }
