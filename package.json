@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "db:reset": "npx tsc && npx sequelize-cli db:drop && npx sequelize-cli db:create",
+    "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json .",
     "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json ."
   },
   "repository": {
@@ -31,12 +32,13 @@
     "@typescript-eslint/parser": "^5.30.6",
     "eslint": "^8.19.0",
     "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-import-resolver-typescript": "^3.2.6",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-sonarjs": "^0.13.0",
     "mysql2": "^2.3.3",
-    "nodemon": "^2.0.19",
     "sequelize-cli": "^6.4.1",
     "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^4.7.4"
   }
 }
