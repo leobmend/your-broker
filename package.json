@@ -16,4 +16,19 @@
     "url": "https://github.com/leobmend/your-broker/issues"
   },
   "homepage": "https://github.com/leobmend/your-broker#readme",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.21.3"
+  },
+  "devDependencies": {
+    "@tsconfig/node16": "^1.0.3",
+    "@types/node": "^18.0.4",
+    "@types/sequelize": "^4.28.14",
+    "nodemon": "^2.0.19",
+    "sequelize-cli": "^6.4.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.4"
+  }
 }
