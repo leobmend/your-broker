@@ -4,7 +4,8 @@
   "description": "Your Broker",
   "main": "index.js",
   "scripts": {
-    "db:reset": "npx tsc && npx sequelize-cli db:drop && npx sequelize-cli db:create"
+    "db:reset": "npx tsc && npx sequelize-cli db:drop && npx sequelize-cli db:create",
+    "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json ."
   },
   "repository": {
     "type": "git",
