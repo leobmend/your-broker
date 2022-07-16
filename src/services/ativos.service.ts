@@ -1,6 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
-import { IAtivo } from '../interfaces/ativos.interface';
+
 import Ativo from '../database/models/ativos.model';
+import { IAtivo } from '../interfaces/ativos.interface';
 import HttpError from '../utils/HttpError';
 
 const getAll = async (): Promise<IAtivo[]> => {
