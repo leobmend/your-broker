@@ -8,6 +8,8 @@ class Cliente extends Model {
 
   nome!: string;
 
+  email!: string;
+
   saldo!: number;
 }
 
