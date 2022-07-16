@@ -4,7 +4,7 @@
   "description": "Your Broker",
   "main": "index.js",
   "scripts": {
-    "db:reset": "tsc && sequelize db:drop && sequelize db:create",
+    "db:reset": "tsc && sequelize db:drop && sequelize db:create && sequelize db:migrate && sequelize db:seed:all",
     "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json .",
     "dev": "tsnd --respawn src/server.ts"
   },
