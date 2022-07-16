@@ -1,2 +1,4 @@
 build/
 src/database/models/index.ts
+src/database/migrations/*
+src/database/seeders/*
