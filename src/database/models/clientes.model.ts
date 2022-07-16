@@ -32,6 +32,10 @@ Cliente.init({
   saldo: {
     type: DECIMAL(10, 2),
     allowNull: false,
+    get() {
+      const value = this.getDataValue('saldo');
+      return Number.isNaN(parseFloat(value)) ? 0 : parseFloat(value);
+    },
   },
 }, {
   sequelize: db,
