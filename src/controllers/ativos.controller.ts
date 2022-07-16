@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+
 import ativosService from '../services/ativos.service';
 
 const getAtivos = async (_req: Request, res: Response): Promise<Response> => {
