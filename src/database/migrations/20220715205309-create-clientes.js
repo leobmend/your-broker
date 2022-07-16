@@ -9,7 +9,12 @@ module.exports = {
       },
       nome: {
         allowNull: false,
-        type: Sequelize.STRING(30),
+        type: Sequelize.STRING(50),
+      },
+      email: {
+        allowNull:false,
+        type: Sequelize.STRING(50),
+        unique: true,
       },
       saldo: {
         allowNull: false,

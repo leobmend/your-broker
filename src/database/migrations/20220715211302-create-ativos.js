@@ -10,6 +10,7 @@ module.exports = {
       codAtivoB3: {
         allowNull: false,
         type: Sequelize.STRING(10),
+        unique: true,
       },
       empresa: {
         allowNull: false,

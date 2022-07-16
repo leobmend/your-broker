@@ -23,6 +23,7 @@ Ativo.init({
   codAtivoB3: {
     type: STRING(10),
     allowNull: false,
+    unique: true,
   },
   empresa: {
     type: STRING(50),

@@ -19,8 +19,13 @@ Cliente.init({
     autoIncrement: true,
   },
   nome: {
-    type: STRING(30),
+    type: STRING(50),
     allowNull: false,
+  },
+  email: {
+    type: STRING(50),
+    allowNull: false,
+    unique: true,
   },
   saldo: {
     type: DECIMAL(10, 2),
