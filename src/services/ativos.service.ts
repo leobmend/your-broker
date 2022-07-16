@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
-import { IAtivo } from '../database/interfaces/ativos.interface';
+import { IAtivo } from '../interfaces/ativos.interface';
 import Ativo from '../database/models/ativos.model';
 import HttpError from '../utils/HttpError';
 
