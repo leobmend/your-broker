@@ -7,6 +7,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      codAtivoB3: {
+        allowNull: false,
+        type: Sequelize.STRING(10),
+      },
       empresa: {
         allowNull: false,
         type: Sequelize.STRING(50),
