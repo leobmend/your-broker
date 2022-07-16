@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { IGetAcoes, IGetAcoesReturn } from '../interfaces/b3API.interface';
+import { IGetAcoes, IGetAcoesReturn } from '../interfaces/b3.API.interface';
 
 const b3API: AxiosInstance = axios.create({
   baseURL: 'https://api-cotacao-b3.labdo.it/api',

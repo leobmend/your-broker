@@ -1,4 +1,4 @@
-const { getAtivos } = require('../../../build/utils/b3API');
+const { getAtivos } = require('../../../build/external/b3.API.model');
 
 const MAX = 150;
 
