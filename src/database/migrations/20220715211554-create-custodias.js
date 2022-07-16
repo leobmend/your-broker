@@ -13,7 +13,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
         references: {
-          model: 'acoes_disponiveis',
+          model: 'ativos',
           key: 'codAtivo',
         },
       },
