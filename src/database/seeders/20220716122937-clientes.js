@@ -6,7 +6,7 @@ module.exports = {
         {
           nome: 'Leonardo Mendonça',
           email: 'teste@email.com',
-          saldo: 0.00,
+          saldo: 5555.55,
         },
       ],
       {},
