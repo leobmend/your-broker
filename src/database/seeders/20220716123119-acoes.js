@@ -1,4 +1,4 @@
-const { getAcoes } = require('../../../build/utils/b3API');
+const { getAtivos } = require('../../../build/utils/b3API');
 
 const MAX = 150;
 
@@ -6,8 +6,8 @@ const randomQtdeAtivo = () => (
   Math.floor(Math.random() * MAX + 1)
 );
 
-const getAcoesSeed = async () => {
-  const b3ApiData = await getAcoes();
+const getAtivosSeed = async () => {
+  const b3ApiData = await getAtivos();
   const acoesSeed = b3ApiData.map(
     (acao) => (
       { ...acao, qtdeAtivo: randomQtdeAtivo() }
@@ -19,9 +19,9 @@ const getAcoesSeed = async () => {
 
 module.exports = {
   up: async (queryInterface) => {
-    const seed = await getAcoesSeed();
+    const seed = await getAtivosSeed();
     await queryInterface.bulkInsert(
-      'acoes_disponiveis',
+      'ativos',
       seed,
       {},
     );
@@ -29,7 +29,7 @@ module.exports = {
 
   down: async (queryInterface) => {
     await queryInterface.bulkDelete(
-      'acoes_disponiveis',
+      'ativos',
       null,
       {},
     );
