@@ -27,10 +27,15 @@ const create = async (cliente: Omit<ICliente, 'codCliente'>): Promise<ICliente> 
   return newCliente;
 };
 
+const updateSaldo = async (codCliente: number, saldo: number): Promise<void> => {
+  await Cliente.update({ saldo }, { where: { codCliente } });
+};
+
 const clientesService = {
   getAll,
   getByCod,
   create,
+  updateSaldo,
 };
 
 export default clientesService;
