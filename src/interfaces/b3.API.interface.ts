@@ -1,9 +1,19 @@
-export interface IGetAcoes {
+export interface IGetAtivo {
   cd_acao: string;
   nm_empresa: string;
 }
 
-export interface IGetAcoesReturn {
+export interface IGetAtivoReturn {
   codAcaoB3: string;
-  nm_empresa: string;
+  empresa: string;
+}
+
+export interface IGetCotacao {
+  cd_acao: string;
+  vl_fechamento: number;
+}
+
+export interface IGetCotacaoReturn {
+  codAtivoB3: string;
+  valor: number;
 }
