@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
+import { IPostOperacao } from '../interfaces/operacoes.interface';
+
 import operacoesService from '../services/operacoes.service';
 
 const getByCliente = async (req: Request, res: Response): Promise<Response> => {
@@ -11,13 +13,13 @@ const getByCliente = async (req: Request, res: Response): Promise<Response> => {
 };
 
 const comprar = async (req: Request, res: Response): Promise<Response> => {
-  const newOperacao = await operacoesService.createCompra(req.body);
+  const newOperacao = await operacoesService.createCompra(req.body as IPostOperacao);
 
   return res.status(StatusCodes.CREATED).json(newOperacao);
 };
 
 const vender = async (req: Request, res: Response): Promise<Response> => {
-  const newOperacao = await operacoesService.createVenda(req.body);
+  const newOperacao = await operacoesService.createVenda(req.body as IPostOperacao);
 
   return res.status(StatusCodes.CREATED).json(newOperacao);
 };
