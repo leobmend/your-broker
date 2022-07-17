@@ -1,15 +1,12 @@
 import { StatusCodes } from 'http-status-codes';
 
 import { ICliente } from '../interfaces/clientes.interface';
-import { IAtivo } from '../interfaces/ativos.interface';
-import { IOperacao } from '../interfaces/operacoes.interface';
-import { IGetCotacaoReturn } from '../interfaces/b3.API.interface';
+import { IOperacao, IPostOperacao } from '../interfaces/operacoes.interface';
 
 import clientesService from './clientes.service';
 import ativosService from './ativos.service';
 import investimentosService from './investimentos.service';
 import Operacao from '../database/models/operacoes.model';
-import { getCotacao } from '../external/b3.API.model';
 
 import HttpError from '../utils/HttpError';
 
@@ -27,22 +24,20 @@ const getByCliente = async (codCliente: number): Promise<IOperacao[] | void> => 
   return operacoes;
 };
 
-const createCompra = async (operacao: Omit<IOperacao, 'codOperacao'|'valor'>): Promise<IOperacao> => {
+const createCompra = async (operacao: IPostOperacao): Promise<IOperacao> => {
   const cliente = await clientesService.getByCod(operacao.codCliente) as ICliente;
-  const ativo = await ativosService.getByCod(operacao.codAtivo) as IAtivo;
+  const ativo = await ativosService.getByCod(operacao.codAtivo);
 
-  if (ativo.qtdeAtivo < operacao.qtdeAtivo) {
+  const newSaldo = cliente.saldo - ativo.valor * operacao.qtdeAtivo;
+  const newQtdeAtivo = ativo.qtdeAtivo - operacao.qtdeAtivo;
+
+  if (newQtdeAtivo < 0) {
     throw new HttpError(StatusCodes.UNPROCESSABLE_ENTITY, 'Quantidade insuficiente de ativos disponíveis para compra');
   }
-
-  const { valor } = await getCotacao(ativo.codAtivoB3) as IGetCotacaoReturn;
-  const newSaldo = cliente.saldo - valor * operacao.qtdeAtivo;
 
   if (newSaldo < 0) {
     throw new HttpError(StatusCodes.UNPROCESSABLE_ENTITY, 'Saldo insuficiente para realizar compra');
   }
-
-  await clientesService.updateSaldo(operacao.codCliente, newSaldo);
 
   const investimento = await investimentosService.getByCod(operacao.codCliente, operacao.codAtivo);
   const codigos = { codCliente: operacao.codCliente, codAtivo: operacao.codAtivo };
@@ -52,40 +47,47 @@ const createCompra = async (operacao: Omit<IOperacao, 'codOperacao'|'valor'>): P
       { ...codigos, qtdeAtivo: operacao.qtdeAtivo },
     );
   } else {
+    const newQtdeInvestimento = investimento.qtdeAtivo + operacao.qtdeAtivo;
     await investimentosService.updateQtde(
-      { ...codigos, qtdeAtivo: investimento.qtdeAtivo + operacao.qtdeAtivo },
+      { ...codigos, qtdeAtivo: newQtdeInvestimento },
     );
   }
 
-  const newOperacao = await Operacao.create({ ...operacao, valor });
+  await clientesService.updateSaldo(operacao.codCliente, newSaldo);
+  await ativosService.updateQtde(operacao.codAtivo, newQtdeAtivo);
+
+  const newOperacao = await Operacao.create({ ...operacao, valor: ativo.valor });
   return newOperacao;
 };
 
-const createVenda = async (operacao: Omit<IOperacao, 'codOperacao'|'valor'>): Promise<IOperacao> => {
-  const cliente = await clientesService.getByCod(operacao.codCliente) as ICliente;
-  const ativo = await ativosService.getByCod(operacao.codAtivo) as IAtivo;
+const createVenda = async (operacao: IPostOperacao): Promise<IOperacao> => {
+  const cliente = await clientesService.getByCod(operacao.codCliente);
+  const ativo = await ativosService.getByCod(operacao.codAtivo);
   const investimento = await investimentosService.getByCod(operacao.codCliente, operacao.codAtivo);
 
   if (!investimento) throw new HttpError(StatusCodes.NOT_FOUND, 'Investimento prévio não encontrado');
 
-  if (investimento.qtdeAtivo < operacao.qtdeAtivo) {
+  const newSaldo = cliente.saldo + ativo.valor * operacao.qtdeAtivo;
+  const newQtdeInvestimento = investimento.qtdeAtivo - operacao.qtdeAtivo;
+  const newQtdeAtivo = ativo.qtdeAtivo + operacao.qtdeAtivo;
+
+  if (newQtdeInvestimento < 0) {
     throw new HttpError(StatusCodes.UNPROCESSABLE_ENTITY, 'Quantidade insuficiente de ativos disponíveis para venda');
   }
-
-  const { valor } = await getCotacao(ativo.codAtivoB3) as IGetCotacaoReturn;
-  const newSaldo = cliente.saldo + valor * operacao.qtdeAtivo;
-
-  await clientesService.updateSaldo(operacao.codCliente, newSaldo);
 
   const newInvestimento = {
     codCliente: operacao.codCliente,
     codAtivo: operacao.codAtivo,
-    qtdeAtivo: investimento.qtdeAtivo - operacao.qtdeAtivo,
+    qtdeAtivo: newQtdeInvestimento,
   };
 
+  await clientesService.updateSaldo(operacao.codCliente, newSaldo);
   await investimentosService.updateQtde(newInvestimento);
+  await ativosService.updateQtde(operacao.codAtivo, newQtdeAtivo);
 
-  const newOperacao = await Operacao.create({ ...operacao, valor: -1 * valor });
+  const newOperacao = await Operacao.create(
+    { ...operacao, valor: ativo.valor, qtdeAtivo: -operacao.qtdeAtivo },
+  );
   return newOperacao;
 };
 

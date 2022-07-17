@@ -12,7 +12,7 @@ class Operacao extends Model {
 
   codCliente!: number;
 
-  codAtivo!: number;
+  codAtivo!: string;
 
   qtdeAtivo!: number;
 
