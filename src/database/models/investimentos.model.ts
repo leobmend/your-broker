@@ -8,7 +8,7 @@ import Cliente from './clientes.model';
 class Investimento extends Model {
   codCliente!: number;
 
-  codAtivo!: number;
+  codAtivo!: string;
 
   qtdeAtivo!: number;
 }

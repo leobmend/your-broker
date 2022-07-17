@@ -4,7 +4,7 @@ export interface IGetAtivo {
 }
 
 export interface IGetAtivoReturn {
-  codAcaoB3: string;
+  codAcao: string;
   empresa: string;
 }
 
@@ -14,6 +14,6 @@ export interface IGetCotacao {
 }
 
 export interface IGetCotacaoReturn {
-  codAtivoB3: string;
+  codAtivo: string;
   valor: number;
 }

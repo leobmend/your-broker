@@ -1,6 +1,9 @@
 export interface IAtivo {
-  codAtivo: number;
-  codAtivoB3: string;
+  codAtivo: string;
   empresa: string;
   qtdeAtivo: number
+}
+
+export interface IGetAtivo extends IAtivo {
+  valor: number;
 }

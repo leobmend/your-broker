@@ -1,16 +1,16 @@
 const { getAtivos } = require('../../../build/external/b3.API.model');
 
-const MAX = 150;
+const MAX_STOCK = 1000000;
 
 const randomQtdeAtivo = () => (
-  Math.floor(Math.random() * MAX + 1)
+  Math.floor(Math.random() * MAX_STOCK + 1)
 );
 
 const getAtivosSeed = async () => {
   const b3ApiData = await getAtivos();
   const acoesSeed = b3ApiData.map(
-    (acao) => (
-      { ...acao, qtdeAtivo: randomQtdeAtivo() }
+    (ativo) => (
+      { ...ativo, qtdeAtivo: randomQtdeAtivo() }
     ),
   );
 

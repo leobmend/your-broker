@@ -11,7 +11,7 @@ module.exports = {
       },
       codAtivo: {
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING(10),
         references: {
           model: 'ativos',
           key: 'codAtivo',

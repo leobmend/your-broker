@@ -4,9 +4,7 @@ import {
 import db from '.';
 
 class Ativo extends Model {
-  codAtivo!: number;
-
-  codAtivoB3!: string;
+  codAtivo!: string;
 
   empresa!: string;
 
@@ -15,15 +13,9 @@ class Ativo extends Model {
 
 Ativo.init({
   codAtivo: {
-    type: INTEGER,
-    allowNull: false,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  codAtivoB3: {
     type: STRING(10),
     allowNull: false,
-    unique: true,
+    primaryKey: true,
   },
   empresa: {
     type: STRING(50),

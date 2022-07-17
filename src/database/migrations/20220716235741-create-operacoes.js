@@ -21,7 +21,7 @@ module.exports = {
         onDelete: 'CASCADE',
       },
       codAtivo: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING(10),
         references: {
           model: 'ativos',
           key: 'codAtivo',

@@ -1,8 +1,11 @@
-export interface IOperacao {
+export interface IPostOperacao {
+  codCliente: number;
+  codAtivo: string;
+  qtdeAtivo: number;
+}
+
+export interface IOperacao extends IPostOperacao {
   codOperacao: number;
   data: Date;
-  codCliente: number;
-  codAtivo: number;
-  qtdeAtivo: number;
   valor: number;
 }
