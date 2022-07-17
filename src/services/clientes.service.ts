@@ -1,12 +1,22 @@
 import { StatusCodes } from 'http-status-codes';
 
-import Cliente from '../database/models/clientes.model';
 import { ICliente } from '../interfaces/clientes.interface';
+
+import Cliente from '../database/models/clientes.model';
+
 import HttpError from '../utils/HttpError';
 
 const getAll = async (): Promise<ICliente[]> => {
   const clientes = await Cliente.findAll();
   return clientes;
+};
+
+const getByCod = async (codCliente: number): Promise<ICliente | void> => {
+  const cliente = await Cliente.findByPk(codCliente);
+
+  if (!cliente) throw new HttpError(StatusCodes.NOT_FOUND, 'Cliente não encontrado');
+
+  return cliente;
 };
 
 const create = async (cliente: Omit<ICliente, 'codCliente'>): Promise<ICliente> => {
@@ -19,6 +29,7 @@ const create = async (cliente: Omit<ICliente, 'codCliente'>): Promise<ICliente> 
 
 const clientesService = {
   getAll,
+  getByCod,
   create,
 };
 
