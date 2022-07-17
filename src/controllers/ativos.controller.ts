@@ -5,6 +5,7 @@ import ativosService from '../services/ativos.service';
 
 const getAtivos = async (_req: Request, res: Response): Promise<Response> => {
   const ativos = await ativosService.getAll();
+
   return res.status(StatusCodes.OK).json(ativos);
 };
 
