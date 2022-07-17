@@ -53,17 +53,17 @@ Operacao.init({
 Cliente.belongsToMany(
   Ativo,
   {
-    as: 'clientes',
+    as: 'clientesOperadores',
     through: Operacao,
     foreignKey: 'codCliente',
-    otherKey: 'codAcao',
+    otherKey: 'codAtivo',
   },
 );
 
 Ativo.belongsToMany(
   Cliente,
   {
-    as: 'ativos',
+    as: 'ativosOperados',
     through: Operacao,
     foreignKey: 'codAtivo',
     otherKey: 'codCliente',
