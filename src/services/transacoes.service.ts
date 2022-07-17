@@ -23,7 +23,10 @@ const getByCliente = async (codCliente: number): Promise<ITransacao[] | void> =>
 };
 
 const createDeposito = async (transacao: Omit<ITransacao, 'codTransacao'|'data'>): Promise<ITransacao> => {
-  await clientesService.getByCod(transacao.codCliente);
+  const cliente = await clientesService.getByCod(transacao.codCliente) as ICliente;
+
+  const newSaldo = cliente.saldo + transacao.valor;
+  await clientesService.updateSaldo(transacao.codCliente, newSaldo);
 
   const newTransacao = await Transacao.create(transacao) as ITransacao;
 
@@ -32,9 +35,10 @@ const createDeposito = async (transacao: Omit<ITransacao, 'codTransacao'|'data'>
 
 const createSaque = async (transacao: Omit<ITransacao, 'codTransacao'|'data'>): Promise<ITransacao> => {
   const cliente = await clientesService.getByCod(transacao.codCliente) as ICliente;
-  if (cliente.saldo - transacao.valor < 0) {
-    throw new HttpError(StatusCodes.UNPROCESSABLE_ENTITY, 'Saldo insuficiente');
-  }
+
+  const newSaldo = cliente.saldo - transacao.valor;
+  if (newSaldo < 0) throw new HttpError(StatusCodes.UNPROCESSABLE_ENTITY, 'Saldo insuficiente');
+  await clientesService.updateSaldo(transacao.codCliente, newSaldo);
 
   const newTransacao = await Transacao.create(
     { ...transacao, valor: -1 * transacao.valor },
