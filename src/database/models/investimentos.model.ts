@@ -27,17 +27,17 @@ Investimento.init({
 Cliente.belongsToMany(
   Ativo,
   {
-    as: 'clientes',
+    as: 'clientesInvestidores',
     through: Investimento,
     foreignKey: 'codCliente',
-    otherKey: 'codAcao',
+    otherKey: 'codAtivo',
   },
 );
 
 Ativo.belongsToMany(
   Cliente,
   {
-    as: 'ativos',
+    as: 'ativosInvestidos',
     through: Investimento,
     foreignKey: 'codAtivo',
     otherKey: 'codCliente',
