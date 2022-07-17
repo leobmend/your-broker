@@ -11,7 +11,7 @@ const getAll = async (): Promise<ICliente[]> => {
   return clientes;
 };
 
-const getByCod = async (codCliente: number): Promise<ICliente | void> => {
+const getByCod = async (codCliente: number): Promise<ICliente> => {
   const cliente = await Cliente.findByPk(codCliente);
 
   if (!cliente) throw new HttpError(StatusCodes.NOT_FOUND, 'Cliente não encontrado');

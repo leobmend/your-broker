@@ -3,14 +3,15 @@ import { StatusCodes } from 'http-status-codes';
 
 import clientesService from '../services/clientes.service';
 
-const getClientes = async (_req: Request, res: Response): Promise<Response> => {
-  const clientes = await clientesService.getAll();
+const getByCod = async (req: Request, res: Response): Promise<Response> => {
+  const { codCliente } = req.params;
+  const cliente = await clientesService.getByCod(parseInt(codCliente, 10));
 
-  return res.status(StatusCodes.OK).json(clientes);
+  return res.status(StatusCodes.OK).json(cliente);
 };
 
 const clientesController = {
-  getClientes,
+  getByCod,
 };
 
 export default clientesController;
