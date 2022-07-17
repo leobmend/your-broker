@@ -5,43 +5,43 @@ import db from '.';
 import Ativo from './ativos.model';
 import Cliente from './clientes.model';
 
-class Custodia extends Model {
+class Investimento extends Model {
   codCliente!: number;
 
-  codAtivo!: number;
+  codAtivo!: string;
 
   qtdeAtivo!: number;
 }
 
-Custodia.init({
+Investimento.init({
   qtdeAtivo: {
     type: INTEGER,
     allowNull: false,
   },
 }, {
   sequelize: db,
-  modelName: 'custodias',
+  modelName: 'investimentos',
   timestamps: false,
 });
 
 Cliente.belongsToMany(
   Ativo,
   {
-    as: 'clientes',
-    through: Custodia,
+    as: 'clientesInvestidores',
+    through: Investimento,
     foreignKey: 'codCliente',
-    otherKey: 'codAcao',
+    otherKey: 'codAtivo',
   },
 );
 
 Ativo.belongsToMany(
   Cliente,
   {
-    as: 'ativos',
-    through: Custodia,
+    as: 'ativosInvestidos',
+    through: Investimento,
     foreignKey: 'codAtivo',
     otherKey: 'codCliente',
   },
 );
 
-export default Custodia;
+export default Investimento;

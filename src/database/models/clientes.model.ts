@@ -8,6 +8,8 @@ class Cliente extends Model {
 
   nome!: string;
 
+  email!: string;
+
   saldo!: number;
 }
 
@@ -19,12 +21,22 @@ Cliente.init({
     autoIncrement: true,
   },
   nome: {
-    type: STRING(30),
+    type: STRING(50),
     allowNull: false,
+  },
+  email: {
+    type: STRING(50),
+    allowNull: false,
+    unique: true,
   },
   saldo: {
     type: DECIMAL(10, 2),
     allowNull: false,
+    // Workaround found at https://github.com/sequelize/sequelize/issues/8019
+    get() {
+      const value = this.getDataValue('saldo');
+      return Number.isNaN(parseFloat(value)) ? 0 : parseFloat(value);
+    },
   },
 }, {
   sequelize: db,
