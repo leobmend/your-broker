@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.STRING(50),
       },
       email: {
-        allowNull:false,
+        allowNull: false,
         type: Sequelize.STRING(50),
         unique: true,
       },
@@ -20,6 +20,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DECIMAL(10, 2),
       },
+      senha: {
+        allowNull: false,
+        type: Sequelize.STRING(200),
+      }
     });
   },
   down: async (queryInterface) => {
