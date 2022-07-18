@@ -11,6 +11,8 @@ class Cliente extends Model {
   email!: string;
 
   saldo!: number;
+
+  senha!: string;
 }
 
 Cliente.init({
@@ -37,6 +39,10 @@ Cliente.init({
       const value = this.getDataValue('saldo');
       return Number.isNaN(parseFloat(value)) ? 0 : parseFloat(value);
     },
+  },
+  senha: {
+    type: STRING(200),
+    allowNull: false,
   },
 }, {
   sequelize: db,
