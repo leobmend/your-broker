@@ -3,7 +3,7 @@ import { Router } from 'express';
 import credenciaisController from '../controllers/credenciais.controller';
 import {
   loginValidationMiddleware, createAccountValidationMiddleware,
-} from '../middlewares/credenciais.validation.middleware';
+} from '../middlewares/credenciais.validations.middleware';
 
 const credenciaisRouter = Router();
 
