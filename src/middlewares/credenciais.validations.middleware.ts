@@ -15,7 +15,7 @@ const loginSchema: ObjectSchema = Joi.object(
   {
     'any.required': 'O campo {#label} é obrigatório',
     'string.pattern.base': 'O campo {#label} precisa ser um e-mail válido',
-    'string.base': 'O campo {#label} precise ser uma cadeia de caracteres',
+    'string.base': 'O campo {#label} precisa ser uma cadeia de caracteres',
     'string.min': 'O campo {#label} precisa possuir no mínimo {#limit} caracteres',
   },
 );
@@ -43,7 +43,7 @@ const createAccountSchema: ObjectSchema = Joi.object(
   {
     'any.required': 'O campo {#label} é obrigatório',
     'string.pattern.base': 'O campo {#label} precisa ser um e-mail válido',
-    'string.base': 'O campo {#label} precise ser uma cadeia de caracteres',
+    'string.base': 'O campo {#label} precisa ser uma cadeia de caracteres',
     'string.min': 'O campo {#label} precisa possuir no mínimo {#limit} caracteres',
   },
 );
