@@ -10,12 +10,13 @@ const operacaoSchema: ObjectSchema = Joi.object(
   {
     codCliente: Joi.number().integer().positive().required(),
     codAtivo: Joi.string().min(2).required(),
-    valor: Joi.number().positive().required(),
+    qtdeAtivo: Joi.number().integer().positive().required(),
   },
 ).messages(
   {
     'any.required': 'O campo {#label} é obrigatório',
     'string.base': 'O campo {#label} precisa ser uma cadeia de caracteres',
+    'string.min': 'O campo {#label} precisa ter no mínimo {#limit} caracteres',
     'number.base': 'O campo {#label} precisa ser um número',
     'number.integer': 'O campo {#label} precisa ser um inteiro',
     'number.positive': 'O campo {#label} precisa ser um número positivo',
