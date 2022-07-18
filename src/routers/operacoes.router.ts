@@ -1,7 +1,9 @@
 import { Router } from 'express';
 
 import operacoesController from '../controllers/operacoes.controller';
+
 import authenticationMiddleware from '../middlewares/authentication.middleware';
+import operacaoValidationMiddleware from '../middlewares/operacoes.validations.middleware';
 
 const operacoesRouter = Router();
 
@@ -14,12 +16,14 @@ operacoesRouter.get(
 operacoesRouter.post(
   '/comprar',
   authenticationMiddleware,
+  operacaoValidationMiddleware,
   operacoesController.comprar,
 );
 
 operacoesRouter.post(
   '/vender',
   authenticationMiddleware,
+  operacaoValidationMiddleware,
   operacoesController.vender,
 );
 
