@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import credenciaisController from '../controllers/credenciais.controller';
+
 import {
   loginValidationMiddleware, createAccountValidationMiddleware,
 } from '../middlewares/credenciais.validations.middleware';
