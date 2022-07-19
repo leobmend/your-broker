@@ -8,14 +8,14 @@ import HttpError from '../utils/HttpError';
 
 const transacaoSchema: ObjectSchema = Joi.object(
   {
-    codCliente: Joi.number().integer().positive().required(),
+    tipo: Joi.valid('saque', 'deposito').required(),
     valor: Joi.number().positive().required(),
   },
 ).messages(
   {
     'any.required': 'O campo {#label} é obrigatório',
+    'any.only': 'O campo {#label} precisa ser "saque" ou "deposito"',
     'number.base': 'O campo {#label} precisa ser um número',
-    'number.integer': 'O campo {#label} precisa ser um inteiro',
     'number.positive': 'O campo {#label} precisa ser um número positivo',
   },
 );
