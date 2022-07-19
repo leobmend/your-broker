@@ -5,7 +5,7 @@ import ativosController from '../controllers/ativos.controller';
 const ativosRouter = Router();
 
 ativosRouter.get(
-  '/busca',
+  '/',
   ativosController.getBySearch,
 );
 
