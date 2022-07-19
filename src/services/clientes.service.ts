@@ -31,7 +31,8 @@ const create = async (cliente: IPostCliente): Promise<string> => {
   }
 
   const clienteToInsert = {
-    ...cliente,
+    nome: cliente.nome.trim(),
+    email: cliente.email.trim(),
     saldo: 0,
     senha: await bcryptUtils.hashPassword(cliente.senha),
   };
