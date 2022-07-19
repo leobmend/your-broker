@@ -1,7 +1,7 @@
 import 'mocha';
 import { expect } from 'chai';
 
-import Ativo from '../../src/database/models/ativos.model';
+import Ativo from '../../../src/database/models/ativos.model';
 
 describe('Model "Ativo":', () => {
   const ativo = new Ativo();

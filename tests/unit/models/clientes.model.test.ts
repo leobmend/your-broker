@@ -1,7 +1,7 @@
 import 'mocha';
 import { expect } from 'chai';
 
-import Cliente from '../../src/database/models/clientes.model';
+import Cliente from '../../../src/database/models/clientes.model';
 
 describe('Model "Cliente":', () => {
   const cliente = new Cliente();

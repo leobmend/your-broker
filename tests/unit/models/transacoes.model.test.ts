@@ -1,7 +1,7 @@
 import 'mocha';
 import { expect } from 'chai';
 
-import Transacao from '../../src/database/models/transacoes.model';
+import Transacao from '../../../src/database/models/transacoes.model';
 
 describe('Model "Transacao":', () => {
   const transacao = new Transacao();
