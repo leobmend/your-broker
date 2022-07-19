@@ -13,7 +13,11 @@ const PAGES_SIZE = 10;
 const minIndex = (pag: number): number => (pag - 1) * PAGES_SIZE;
 const maxIndex = (pag: number): number => pag * PAGES_SIZE;
 
-const getBySearch = async (termo: string, pag: number, _ordenacao: string): Promise<IAtivo[]> => {
+const getBySearch = async (
+  termo: string,
+  pag: number,
+  _ordenacao?: string,
+): Promise<IGetAtivo[]> => {
   const ativos = await Ativo.findAll({
     where: {
       [Op.or]: [
@@ -75,6 +79,9 @@ const getByCod = async (codAtivo: string): Promise<IGetAtivo> => {
 };
 
 const updateQtde = async (codAtivo: string, qtdeAtivo: number): Promise<void> => {
+  const ativo = await Ativo.findByPk(codAtivo);
+  if (!ativo) throw new HttpError(StatusCodes.NOT_FOUND, 'Ativo não encontrado');
+
   await Ativo.update({ qtdeAtivo }, { where: { codAtivo } });
 };
 
