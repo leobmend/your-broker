@@ -65,8 +65,6 @@ const createVenda = async (operacao: IPostOperacao): Promise<IOperacao> => {
   const ativo = await ativosService.getByCod(operacao.codAtivo);
   const investimento = await investimentosService.getByCod(operacao.codCliente, operacao.codAtivo);
 
-  if (!investimento) throw new HttpError(StatusCodes.NOT_FOUND, 'Investimento prévio não encontrado');
-
   const newSaldo = cliente.saldo + ativo.valor * operacao.qtdeAtivo;
   const newQtdeInvestimento = investimento.qtdeAtivo - operacao.qtdeAtivo;
   const newQtdeAtivo = ativo.qtdeAtivo + operacao.qtdeAtivo;

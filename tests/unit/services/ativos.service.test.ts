@@ -1,4 +1,4 @@
-import { stub } from 'sinon';
+import { SinonStub, stub } from 'sinon';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
@@ -15,11 +15,23 @@ chai.use(chaiAsPromised);
 const { expect } = chai;
 
 describe('Service "Ativos":', () => {
-  const findAllStub = stub(Ativo, 'findAll');
-  const findByPkStub = stub(Ativo, 'findByPk');
-  const updateStub = stub(Ativo, 'update');
-  const createStub = stub(Ativo, 'create');
-  const getCotacaoStub = stub(b3APIModel, 'getCotacao');
+  let findAllStub: SinonStub;
+  let findByPkStub: SinonStub;
+  let createStub: SinonStub;
+  let updateStub: SinonStub;
+  let getCotacaoStub: SinonStub;
+
+  before(() => {
+    findAllStub = stub(Ativo, 'findAll');
+    findByPkStub = stub(Ativo, 'findByPk');
+    createStub = stub(Ativo, 'create');
+    updateStub = stub(Ativo, 'update');
+    getCotacaoStub = stub(b3APIModel, 'getCotacao');
+  });
+
+  after(() => {
+    getCotacaoStub.restore();
+  });
 
   describe('method "getBySearch" should', () => {
     let ativos: IGetAtivo[];

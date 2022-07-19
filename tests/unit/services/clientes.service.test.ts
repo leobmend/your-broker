@@ -1,4 +1,4 @@
-import { stub } from 'sinon';
+import { SinonStub, stub } from 'sinon';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
@@ -15,11 +15,19 @@ chai.use(chaiAsPromised);
 const { expect } = chai;
 
 describe('Service "Clientes":', () => {
-  const findByPkStub = stub(Cliente, 'findByPk');
-  const findOneStub = stub(Cliente, 'findOne');
-  const createStub = stub(Cliente, 'create');
-  const updateStub = stub(Cliente, 'update');
-  const bcryptCompareSutb = stub(bcryptUtils, 'comparePassword');
+  let findByPkStub: SinonStub;
+  let findOneStub: SinonStub;
+  let createStub: SinonStub;
+  let updateStub: SinonStub;
+  let bcryptCompareSutb: SinonStub;
+
+  before(() => {
+    findByPkStub = stub(Cliente, 'findByPk');
+    findOneStub = stub(Cliente, 'findOne');
+    createStub = stub(Cliente, 'create');
+    updateStub = stub(Cliente, 'update');
+    bcryptCompareSutb = stub(bcryptUtils, 'comparePassword');
+  });
 
   describe('method "getByCod" should', () => {
     describe('when the investor is not registered', () => {
