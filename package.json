@@ -5,6 +5,7 @@
   "main": "build/server.js",
   "scripts": {
     "test": "mocha --require ts-node/register 'tests/**/*.ts'",
+    "test:coverage": "nyc mocha --require ts-node/register 'tests/**/*.ts'",
     "db:re-migrate": "tsc && sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:all",
     "db:reset": "tsc && sequelize db:drop && sequelize db:create && sequelize db:migrate && sequelize db:seed:all",
     "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json .",
