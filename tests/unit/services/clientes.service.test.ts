@@ -2,14 +2,14 @@ import { stub } from 'sinon';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
+import clientesService from '../../../src/services/clientes.service';
+
 import { ICliente } from '../../../src/interfaces/clientes.interface';
 
 import Cliente from '../../../src/database/models/clientes.model';
-
-import clientesService from '../../../src/services/clientes.service';
+import bcryptUtils from '../../../src/utils/bcrypt.util';
 
 import { clienteFullMock, clienteGetMock, clientePostMock } from '../../mocks/cliente.mock';
-import bcryptUtils from '../../../src/utils/bcrypt.util';
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
@@ -78,13 +78,10 @@ describe('Service "Clientes":', () => {
         findOneStub.reset();
       });
 
-      it(
-        'throw an error with the message "Já existe cliente cadastrado com este e-mail"',
-        async () => (
-          expect(clientesService.create(clientePostMock))
-            .to.eventually.be.rejected.and.have.property('message', 'Já existe cliente cadastrado com este e-mail')
-        ),
-      );
+      it('throw an error with the message "Cadastro inválido"', async () => (
+        expect(clientesService.create(clientePostMock))
+          .to.eventually.be.rejected.and.have.property('message', 'Cadastro inválido')
+      ));
     });
 
     describe('when is a new investor', () => {
@@ -125,13 +122,10 @@ describe('Service "Clientes":', () => {
         findOneStub.reset();
       });
 
-      it(
-        'throw an error with the message "Cadastro não encontrado"',
-        async () => (
-          expect(clientesService.authenticate(clientePostMock))
-            .to.eventually.be.rejected.and.have.property('message', 'Cadastro não encontrado')
-        ),
-      );
+      it('throw an error with the message "Cadastro não encontrado"', async () => (
+        expect(clientesService.authenticate(clientePostMock))
+          .to.eventually.be.rejected.and.have.property('message', 'Cadastro não encontrado')
+      ));
     });
 
     describe('when investor is registered but password is wrong', () => {
@@ -175,6 +169,7 @@ describe('Service "Clientes":', () => {
 
   describe('method "updateSaldo" should', () => {
     const NEW_SALDO = 100000;
+
     describe('when the investor is not registered', () => {
       before(() => {
         findByPkStub.resolves(null);
@@ -184,13 +179,10 @@ describe('Service "Clientes":', () => {
         findByPkStub.reset();
       });
 
-      it(
-        'throw an error with the message "Cliente não encontrado"',
-        async () => (
-          expect(clientesService.updateSaldo(10, 500))
-            .to.eventually.be.rejected.and.have.property('message', 'Cliente não encontrado')
-        ),
-      );
+      it('throw an error with the message "Cliente não encontrado"', async () => (
+        expect(clientesService.updateSaldo(10, 500))
+          .to.eventually.be.rejected.and.have.property('message', 'Cliente não encontrado')
+      ));
     });
 
     describe('when the investor is registered', () => {
