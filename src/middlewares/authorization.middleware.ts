@@ -9,10 +9,9 @@ const authorizationMiddleware = (
   next: NextFunction,
 ) => {
   const { codCliente: codClienteToken } = req;
-  const { codCliente: codClienteBody } = req.body;
   const codClienteParams = parseInt(req.params.codCliente, 10);
 
-  if (codClienteToken !== codClienteBody && codClienteToken !== codClienteParams) {
+  if (codClienteToken !== codClienteParams) {
     throw new HttpError(StatusCodes.UNAUTHORIZED, 'Cliente não autorizado');
   }
 

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+
 import { ITransacao } from '../interfaces/transacoes.interface';
 
 import transacoesService from '../services/transacoes.service';
@@ -9,25 +10,31 @@ const getByCliente = async (req: Request, res: Response): Promise<Response> => {
 
   const transacoes = await transacoesService.getByCliente(parseInt(codCliente as string, 10));
 
-  return res.status(StatusCodes.CREATED).json(transacoes);
+  return res.status(StatusCodes.CREATED).json({ data: transacoes });
 };
 
-const deposito = async (req: Request, res: Response): Promise<Response> => {
-  const newTransacao = await transacoesService.createDeposito(req.body as ITransacao);
+const create = async (req: Request, res: Response): Promise<Response> => {
+  const { codCliente } = req.params;
+  const { tipo, valor } = req.body;
 
-  return res.status(StatusCodes.CREATED).json(newTransacao);
-};
+  const transacao = {
+    codCliente: parseInt(codCliente, 10),
+    valor,
+  };
 
-const saque = async (req: Request, res: Response): Promise<Response> => {
-  const newTransacao = await transacoesService.createSaque(req.body as ITransacao);
+  let newTransacao: ITransacao;
+  if (tipo === 'deposito') {
+    newTransacao = await transacoesService.createDeposito(transacao);
+  } else {
+    newTransacao = await transacoesService.createSaque(transacao);
+  }
 
-  return res.status(StatusCodes.CREATED).json(newTransacao);
+  return res.status(StatusCodes.CREATED).json({ data: newTransacao });
 };
 
 const transacoesController = {
   getByCliente,
-  deposito,
-  saque,
+  create,
 };
 
 export default transacoesController;

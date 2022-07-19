@@ -8,7 +8,7 @@ import HttpError from '../utils/HttpError';
 
 const loginSchema: ObjectSchema = Joi.object(
   {
-    email: Joi.string().regex(/\w.+@\w.+[.]\w.+/i).required(),
+    email: Joi.string().regex(/\w+([.]\w+)*@\w+([.]\w+)+/i).required(),
     senha: Joi.string().min(6).required(),
   },
 ).messages(
@@ -36,7 +36,7 @@ export const loginValidationMiddleware = (
 const createAccountSchema: ObjectSchema = Joi.object(
   {
     nome: Joi.string().min(3).required(),
-    email: Joi.string().regex(/\w.+@\w.+[.]\w.+/i).required(),
+    email: Joi.string().regex(/\w+([.]\w+)*@\w+([.]\w+)+/i).required(),
     senha: Joi.string().min(6).required(),
   },
 ).messages(

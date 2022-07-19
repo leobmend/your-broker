@@ -8,13 +8,14 @@ import HttpError from '../utils/HttpError';
 
 const operacaoSchema: ObjectSchema = Joi.object(
   {
-    codCliente: Joi.number().integer().positive().required(),
+    tipo: Joi.valid('compra', 'venda').required(),
     codAtivo: Joi.string().min(2).required(),
     qtdeAtivo: Joi.number().integer().positive().required(),
   },
 ).messages(
   {
     'any.required': 'O campo {#label} é obrigatório',
+    'any.only': 'O campo {#label} precisa ser "compra" ou "venda"',
     'string.base': 'O campo {#label} precisa ser uma cadeia de caracteres',
     'string.min': 'O campo {#label} precisa ter no mínimo {#limit} caracteres',
     'number.base': 'O campo {#label} precisa ser um número',

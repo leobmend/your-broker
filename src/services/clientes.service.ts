@@ -24,11 +24,12 @@ const create = async (cliente: IPostCliente): Promise<string> => {
     { where: { email: cliente.email }, attributes: { exclude: ['senha'] } },
   );
   if (clienteByEmail) {
-    throw new HttpError(StatusCodes.CONFLICT, 'Já existe cliente cadastrado com este e-mail');
+    throw new HttpError(StatusCodes.CONFLICT, 'Cadastro inválido');
   }
 
   const clienteToInsert = {
-    ...cliente,
+    nome: cliente.nome.trim(),
+    email: cliente.email.trim(),
     saldo: 0,
     senha: await bcryptUtils.hashPassword(cliente.senha),
   };
