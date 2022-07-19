@@ -27,11 +27,12 @@ const getByCod = async (codCliente: number): Promise<ICliente> => {
 const create = async (cliente: IPostCliente): Promise<string> => {
   const clienteByEmail = await Cliente.findOne({ where: { email: cliente.email } });
   if (clienteByEmail) {
-    throw new HttpError(StatusCodes.CONFLICT, 'Já existe cliente cadastrado com este e-mail');
+    throw new HttpError(StatusCodes.CONFLICT, 'Cadastro inválido');
   }
 
   const clienteToInsert = {
-    ...cliente,
+    nome: cliente.nome.trim(),
+    email: cliente.email.trim(),
     saldo: 0,
     senha: await bcryptUtils.hashPassword(cliente.senha),
   };

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { IPostOperacao } from '../interfaces/operacoes.interface';
+import { IOperacao } from '../interfaces/operacoes.interface';
 
 import operacoesService from '../services/operacoes.service';
 
@@ -9,25 +9,32 @@ const getByCliente = async (req: Request, res: Response): Promise<Response> => {
   const { codCliente } = req.params;
   const operacoes = await operacoesService.getByCliente(parseInt(codCliente as string, 10));
 
-  return res.status(StatusCodes.CREATED).json(operacoes);
+  return res.status(StatusCodes.OK).json({ data: operacoes });
 };
 
-const comprar = async (req: Request, res: Response): Promise<Response> => {
-  const newOperacao = await operacoesService.createCompra(req.body as IPostOperacao);
+const create = async (req: Request, res: Response): Promise<Response> => {
+  const { codCliente } = req.params;
+  const { tipo, codAtivo, qtdeAtivo } = req.body;
 
-  return res.status(StatusCodes.CREATED).json(newOperacao);
-};
+  const operacao = {
+    codCliente: parseInt(codCliente, 10),
+    codAtivo,
+    qtdeAtivo,
+  };
 
-const vender = async (req: Request, res: Response): Promise<Response> => {
-  const newOperacao = await operacoesService.createVenda(req.body as IPostOperacao);
+  let newOperacao: IOperacao;
+  if (tipo === 'compra') {
+    newOperacao = await operacoesService.createCompra(operacao);
+  } else {
+    newOperacao = await operacoesService.createVenda(operacao);
+  }
 
-  return res.status(StatusCodes.CREATED).json(newOperacao);
+  return res.status(StatusCodes.CREATED).json({ data: newOperacao });
 };
 
 const operacoesController = {
   getByCliente,
-  comprar,
-  vender,
+  create,
 };
 
 export default operacoesController;

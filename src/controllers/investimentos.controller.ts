@@ -7,7 +7,7 @@ const getByCliente = async (req: Request, res: Response): Promise<Response> => {
   const { codCliente } = req.params;
   const investimentos = await investimentosService.getByCliente(parseInt(codCliente as string, 10));
 
-  return res.status(StatusCodes.CREATED).json(investimentos);
+  return res.status(StatusCodes.OK).json({ data: investimentos });
 };
 
 const investimentosController = {
