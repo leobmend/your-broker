@@ -10,7 +10,6 @@ import { IGetInvestimento, IInvestimento } from '../../../src/interfaces/investi
 import Investimento from '../../../src/database/models/investimentos.model';
 import * as b3APIModel from '../../../src/external/b3.API.model';
 
-import { clienteGetMock } from '../../mocks/cliente.mock';
 import { investimentoListMock, investimentoMock } from '../../mocks/investimento.mock';
 import { cotacaoMock } from '../../mocks/ativo.mock';
 
@@ -35,6 +34,11 @@ describe('Service "Investimentos":', () => {
   });
 
   after(() => {
+    findOneStub.restore();
+    findAllStub.restore();
+    createStub.restore();
+    updateStub.restore();
+    clientesGetByCodStub.restore();
     getCotacaoStub.restore();
   });
 
@@ -85,12 +89,10 @@ describe('Service "Investimentos":', () => {
   describe('method "getByCliente" should', () => {
     describe('when the client has no investment', () => {
       before(() => {
-        clientesGetByCodStub.resolves(clienteGetMock);
         findAllStub.resolves([]);
       });
 
       after(() => {
-        clientesGetByCodStub.reset();
         findAllStub.reset();
       });
 
@@ -104,14 +106,12 @@ describe('Service "Investimentos":', () => {
       let investimentos: IGetInvestimento[];
 
       before(async () => {
-        clientesGetByCodStub.resolves(clienteGetMock);
         findAllStub.resolves(investimentoListMock);
         getCotacaoStub.resolves(cotacaoMock);
         investimentos = await investimentosService.getByCliente(1);
       });
 
       after(() => {
-        clientesGetByCodStub.reset();
         findAllStub.reset();
         getCotacaoStub.reset();
       });

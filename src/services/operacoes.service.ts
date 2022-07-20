@@ -10,12 +10,7 @@ import Operacao from '../database/models/operacoes.model';
 
 import HttpError from '../utils/HttpError';
 
-const getAll = async (): Promise<IOperacao[]> => {
-  const operacoes = await Operacao.findAll();
-  return operacoes;
-};
-
-const getByCliente = async (codCliente: number): Promise<IOperacao[] | void> => {
+const getByCliente = async (codCliente: number): Promise<IOperacao[]> => {
   await clientesService.getByCod(codCliente);
 
   const operacoes = await Operacao.findAll({ where: { codCliente } });
@@ -90,7 +85,6 @@ const createVenda = async (operacao: IPostOperacao): Promise<IOperacao> => {
 };
 
 const transacoesService = {
-  getAll,
   getByCliente,
   createCompra,
   createVenda,
