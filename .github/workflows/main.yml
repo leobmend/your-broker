@@ -33,4 +33,4 @@ jobs:
           run: npm install
 
         - name: Executando o mocha para verificar se a erros
-          run: mocha --require ts-node/register 'tests/**/*.ts'
+          run: npx mocha --require ts-node/register 'tests/**/*.ts'
