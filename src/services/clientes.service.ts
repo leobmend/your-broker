@@ -8,11 +8,6 @@ import bcryptUtils from '../utils/bcrypt.util';
 import HttpError from '../utils/HttpError';
 import jwtUtils from '../utils/jwt.util';
 
-const getAll = async (): Promise<ICliente[]> => {
-  const clientes = await Cliente.findAll();
-  return clientes;
-};
-
 const getByCod = async (codCliente: number): Promise<ICliente> => {
   const cliente = await Cliente.findByPk(
     codCliente,
@@ -25,7 +20,9 @@ const getByCod = async (codCliente: number): Promise<ICliente> => {
 };
 
 const create = async (cliente: IPostCliente): Promise<string> => {
-  const clienteByEmail = await Cliente.findOne({ where: { email: cliente.email } });
+  const clienteByEmail = await Cliente.findOne(
+    { where: { email: cliente.email }, attributes: { exclude: ['senha'] } },
+  );
   if (clienteByEmail) {
     throw new HttpError(StatusCodes.CONFLICT, 'Cadastro inválido');
   }
@@ -60,11 +57,11 @@ const authenticate = async (login: IPostLogin): Promise<string> => {
 };
 
 const updateSaldo = async (codCliente: number, saldo: number): Promise<void> => {
+  await getByCod(codCliente);
   await Cliente.update({ saldo }, { where: { codCliente } });
 };
 
 const clientesService = {
-  getAll,
   getByCod,
   create,
   authenticate,

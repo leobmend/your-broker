@@ -9,8 +9,12 @@ import { getCotacao } from '../external/b3.API.model';
 
 import HttpError from '../utils/HttpError';
 
-const getByCod = async (codCliente: number, codAtivo: string): Promise<IInvestimento | null> => {
+const getByCod = async (codCliente: number, codAtivo: string): Promise<IInvestimento> => {
   const investimento = await Investimento.findOne({ where: { codCliente, codAtivo } });
+  if (!investimento) {
+    throw new HttpError(StatusCodes.NOT_FOUND, 'Investimento não encontrado');
+  }
+
   return investimento;
 };
 
@@ -40,12 +44,19 @@ const getByCliente = async (codCliente: number): Promise<IGetInvestimento[]> => 
 };
 
 const create = async (investimento: Omit<IInvestimento, ''>): Promise<IInvestimento> => {
+  const investimentoByCod = await Investimento.findOne(
+    { where: { codCliente: investimento.codCliente, codAtivo: investimento.codAtivo } },
+  );
+  if (investimentoByCod) throw new HttpError(StatusCodes.CONFLICT, 'Investimento já cadastrado');
+
   const newInvestimento = await Investimento.create(investimento);
 
   return newInvestimento;
 };
 
 const updateQtde = async (investimento: IInvestimento): Promise<void> => {
+  await getByCod(investimento.codCliente, investimento.codAtivo);
+
   const { codCliente, codAtivo, qtdeAtivo } = investimento;
 
   await Investimento.update({ qtdeAtivo }, { where: { codCliente, codAtivo } });

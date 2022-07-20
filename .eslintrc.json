@@ -21,6 +21,15 @@
     "import/extensions": "off",
     "@typescript-eslint/no-unused-vars": ["error", { "args": "all", "argsIgnorePattern": "^_"}]
   },
+  "overrides": [
+    {
+      "files": ["tests/**"],
+      "rules": {
+        "no-unused-expressions": "off",
+        "@typescript-eslint/no-empty-function": "off"
+      }
+    }
+  ],
   "settings": {
     "import/resolver": {
       "typescript": {}

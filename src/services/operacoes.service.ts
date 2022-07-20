@@ -10,12 +10,7 @@ import Operacao from '../database/models/operacoes.model';
 
 import HttpError from '../utils/HttpError';
 
-const getAll = async (): Promise<IOperacao[]> => {
-  const operacoes = await Operacao.findAll();
-  return operacoes;
-};
-
-const getByCliente = async (codCliente: number): Promise<IOperacao[] | void> => {
+const getByCliente = async (codCliente: number): Promise<IOperacao[]> => {
   await clientesService.getByCod(codCliente);
 
   const operacoes = await Operacao.findAll({ where: { codCliente } });
@@ -65,8 +60,6 @@ const createVenda = async (operacao: IPostOperacao): Promise<IOperacao> => {
   const ativo = await ativosService.getByCod(operacao.codAtivo);
   const investimento = await investimentosService.getByCod(operacao.codCliente, operacao.codAtivo);
 
-  if (!investimento) throw new HttpError(StatusCodes.NOT_FOUND, 'Investimento prévio não encontrado');
-
   const newSaldo = cliente.saldo + ativo.valor * operacao.qtdeAtivo;
   const newQtdeInvestimento = investimento.qtdeAtivo - operacao.qtdeAtivo;
   const newQtdeAtivo = ativo.qtdeAtivo + operacao.qtdeAtivo;
@@ -82,8 +75,8 @@ const createVenda = async (operacao: IPostOperacao): Promise<IOperacao> => {
   };
 
   await clientesService.updateSaldo(operacao.codCliente, newSaldo);
-  await investimentosService.updateQtde(newInvestimento);
   await ativosService.updateQtde(operacao.codAtivo, newQtdeAtivo);
+  await investimentosService.updateQtde(newInvestimento);
 
   const newOperacao = await Operacao.create(
     { ...operacao, valor: ativo.valor, qtdeAtivo: -operacao.qtdeAtivo },
@@ -92,7 +85,6 @@ const createVenda = async (operacao: IPostOperacao): Promise<IOperacao> => {
 };
 
 const transacoesService = {
-  getAll,
   getByCliente,
   createCompra,
   createVenda,
