@@ -24,32 +24,23 @@ describe('Service "Operacoes":', () => {
   let findAllStub: SinonStub;
   let createStub: SinonStub;
   let clientesGetByCodStub: SinonStub;
-  // let clientesUpdateSaldoStub: SinonStub;
   let ativosGetByCodStub: SinonStub;
-  // let ativosUpdateQtdeStub: SinonStub;
   let investimentosGetByCodStub: SinonStub;
-  // let investimentosUpdateQtdeStub: SinonStub;
 
   before(() => {
     findAllStub = stub(Operacao, 'findAll');
     createStub = stub(Operacao, 'create');
     clientesGetByCodStub = stub(clientesService, 'getByCod');
-    // clientesUpdateSaldoStub = stub(clientesService, 'updateSaldo');
     ativosGetByCodStub = stub(ativosService, 'getByCod');
-    // ativosUpdateQtdeStub = stub(ativosService, 'updateQtde');
     investimentosGetByCodStub = stub(investimentosService, 'getByCod');
-    // investimentosUpdateQtdeStub = stub(investimentosService, 'updateQtde');
   });
 
   after(() => {
     findAllStub.restore();
     createStub.restore();
     clientesGetByCodStub.restore();
-    // clientesUpdateSaldoStub.restore();
     ativosGetByCodStub.restore();
-    // ativosUpdateQtdeStub.restore();
     investimentosGetByCodStub.restore();
-    // investimentosUpdateQtdeStub.restore();
   });
 
   describe('method "getByCliente" should', () => {
@@ -80,7 +71,7 @@ describe('Service "Operacoes":', () => {
         findAllStub.reset();
       });
 
-      it('call the Investimento.findAll once', () => {
+      it('call the Operacao.findAll once', () => {
         expect(findAllStub.calledOnce).to.be.true;
       });
 
