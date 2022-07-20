@@ -34,7 +34,13 @@ const createCompra = async (operacao: IPostOperacao): Promise<IOperacao> => {
     throw new HttpError(StatusCodes.UNPROCESSABLE_ENTITY, 'Saldo insuficiente para realizar compra');
   }
 
-  const investimento = await investimentosService.getByCod(operacao.codCliente, operacao.codAtivo);
+  let investimento;
+  try {
+    investimento = await investimentosService.getByCod(operacao.codCliente, operacao.codAtivo);
+  } catch (_err) {
+    investimento = undefined;
+  }
+
   const codigos = { codCliente: operacao.codCliente, codAtivo: operacao.codAtivo };
 
   if (!investimento) {
