@@ -1,4 +1,4 @@
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   eslint:
@@ -12,8 +12,25 @@ jobs:
           with:
             node-version: 14
 
-        - name: instalando as dependências
+        - name: Instalando as dependências
           run: npm install
 
-        - name: executando o lint para verificar se a erros
+        - name: Executando o lint para verificar se a erros
           run: npx eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json .
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+        - name: Verifica o repositório do Git
+          uses: actions/checkout@v2
+        
+        - name: Instala o node com a versão
+          uses: actions/setup-node@v1
+          with:
+            node-version: 16
+
+        - name: Instalando as dependências
+          run: npm install
+
+        - name: Executando o mocha para verificar se a erros
+          run: npx mocha --require ts-node/register 'tests/**/*.ts'

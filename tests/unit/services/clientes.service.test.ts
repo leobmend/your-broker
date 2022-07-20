@@ -7,9 +7,12 @@ import clientesService from '../../../src/services/clientes.service';
 import { ICliente } from '../../../src/interfaces/clientes.interface';
 
 import Cliente from '../../../src/database/models/clientes.model';
+import jwtUtils from '../../../src/utils/jwt.util';
 import bcryptUtils from '../../../src/utils/bcrypt.util';
 
 import { clienteFullMock, clienteGetMock, clientePostMock } from '../../mocks/cliente.mock';
+
+const JWT_TOKEN_MOCK = 'jwt-token-mock';
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
@@ -19,14 +22,24 @@ describe('Service "Clientes":', () => {
   let findOneStub: SinonStub;
   let createStub: SinonStub;
   let updateStub: SinonStub;
-  let bcryptCompareSutb: SinonStub;
+  let bcryptCompareStub: SinonStub;
+  let jwtGenerateTokenStub: SinonStub;
 
   before(() => {
     findByPkStub = stub(Cliente, 'findByPk');
     findOneStub = stub(Cliente, 'findOne');
     createStub = stub(Cliente, 'create');
     updateStub = stub(Cliente, 'update');
-    bcryptCompareSutb = stub(bcryptUtils, 'comparePassword');
+    bcryptCompareStub = stub(bcryptUtils, 'comparePassword');
+    jwtGenerateTokenStub = stub(jwtUtils, 'generateToken');
+  });
+
+  after(() => {
+    findByPkStub.restore();
+    findOneStub.restore();
+    createStub.restore();
+    updateStub.restore();
+    jwtGenerateTokenStub.restore();
   });
 
   describe('method "getByCod" should', () => {
@@ -98,12 +111,14 @@ describe('Service "Clientes":', () => {
       before(async () => {
         findOneStub.resolves(null);
         createStub.resolves(clienteFullMock as Cliente);
+        jwtGenerateTokenStub.returns(JWT_TOKEN_MOCK);
         token = await clientesService.create(clientePostMock);
       });
 
       after(() => {
         findOneStub.reset();
         createStub.reset();
+        jwtGenerateTokenStub.reset();
       });
 
       it('call the Cliente.findOne once', () => {
@@ -156,13 +171,15 @@ describe('Service "Clientes":', () => {
 
       before(async () => {
         findOneStub.resolves(clienteFullMock as Cliente);
-        bcryptCompareSutb.resolves(true);
+        bcryptCompareStub.resolves(true);
+        jwtGenerateTokenStub.returns(JWT_TOKEN_MOCK);
         token = await clientesService.authenticate(clientePostMock);
       });
 
       after(() => {
         findOneStub.reset();
-        bcryptCompareSutb.reset();
+        bcryptCompareStub.reset();
+        jwtGenerateTokenStub.reset();
       });
 
       it('call the Cliente.findOne once', () => {
