@@ -10,7 +10,7 @@ const getByCliente = async (req: Request, res: Response): Promise<Response> => {
 
   const transacoes = await transacoesService.getByCliente(parseInt(codCliente as string, 10));
 
-  return res.status(StatusCodes.CREATED).json({ data: transacoes });
+  return res.status(StatusCodes.OK).json({ data: transacoes });
 };
 
 const create = async (req: Request, res: Response): Promise<Response> => {

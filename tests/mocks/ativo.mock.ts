@@ -4,6 +4,13 @@ export const ativoMock = {
   qtdeAtivo: 100,
 };
 
+export const ativoFullMock = {
+  codAtivo: 'ABC1',
+  empresa: 'ABC Enterprise',
+  qtdeAtivo: 100,
+  valor: 15.5,
+};
+
 export const ativoListMock = [
   {
     codAtivo: 'ABC1',
@@ -21,6 +28,8 @@ export const ativoListMock = [
     qtdeAtivo: 200,
   },
 ];
+
+export const ativoFullListMock = ativoListMock.map((ativo) => ({ ...ativo, valor: 15.5 }));
 
 export const cotacaoMock = {
   codAtivo: 'GENERIC',
