@@ -75,8 +75,8 @@ const createVenda = async (operacao: IPostOperacao): Promise<IOperacao> => {
   };
 
   await clientesService.updateSaldo(operacao.codCliente, newSaldo);
-  await investimentosService.updateQtde(newInvestimento);
   await ativosService.updateQtde(operacao.codAtivo, newQtdeAtivo);
+  await investimentosService.updateQtde(newInvestimento);
 
   const newOperacao = await Operacao.create(
     { ...operacao, valor: ativo.valor, qtdeAtivo: -operacao.qtdeAtivo },

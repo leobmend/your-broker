@@ -66,7 +66,7 @@ export const balanceNotEnoughMock = {
   },
 };
 
-export const balanceAndQtdeEnoushMock = {
+export const balanceAndQtdeEnoughMock = {
   ativo: {
     codAtivo: 'ABC1',
     empresa: 'ABC Enterprise',
@@ -83,5 +83,55 @@ export const balanceAndQtdeEnoushMock = {
     codCliente: 1,
     codAtivo: 'ABC1',
     qtdeAtivo: 20,
+  },
+};
+
+export const investQtdeNotEnoughMock = {
+  investimento: {
+    codCliente: 1,
+    codAtivo: 'ABC1',
+    qtdeAtivo: 1,
+  },
+  ativo: {
+    codAtivo: 'ABC1',
+    empresa: 'ABC Enterprise',
+    qtdeAtivo: 1,
+    valor: 15,
+  },
+  cliente: {
+    codCliente: 1,
+    nome: 'John Doe',
+    email: 'john@test.com',
+    saldo: 10000,
+  },
+  operacao: {
+    codCliente: 1,
+    codAtivo: 'ABC1',
+    qtdeAtivo: 10,
+  },
+};
+
+export const investQtdeEnoughMock = {
+  investimento: {
+    codCliente: 1,
+    codAtivo: 'ABC1',
+    qtdeAtivo: 100,
+  },
+  ativo: {
+    codAtivo: 'ABC1',
+    empresa: 'ABC Enterprise',
+    qtdeAtivo: 1,
+    valor: 15,
+  },
+  cliente: {
+    codCliente: 1,
+    nome: 'John Doe',
+    email: 'john@test.com',
+    saldo: 10000,
+  },
+  operacao: {
+    codCliente: 1,
+    codAtivo: 'ABC1',
+    qtdeAtivo: 10,
   },
 };

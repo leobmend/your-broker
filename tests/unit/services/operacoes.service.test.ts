@@ -13,7 +13,7 @@ import Operacao from '../../../src/database/models/operacoes.model';
 
 import {
   qtdeNotEnoughMock, operacaoFullListMock, balanceNotEnoughMock,
-  balanceAndQtdeEnoushMock, operacaoFullMock,
+  balanceAndQtdeEnoughMock, operacaoFullMock, investQtdeNotEnoughMock, investQtdeEnoughMock,
 } from '../../mocks/operacao.mock';
 import { investimentoFullMock } from '../../mocks/investimento.mock';
 
@@ -24,29 +24,32 @@ describe('Service "Operacoes":', () => {
   let findAllStub: SinonStub;
   let createStub: SinonStub;
   let clientesGetByCodStub: SinonStub;
-  let clientesUpdateSaldoStub: SinonStub;
+  // let clientesUpdateSaldoStub: SinonStub;
   let ativosGetByCodStub: SinonStub;
-  let ativosUpdateQtdeStub: SinonStub;
+  // let ativosUpdateQtdeStub: SinonStub;
   let investimentosGetByCodStub: SinonStub;
-  let investimentosUpdateQtdeStub: SinonStub;
+  // let investimentosUpdateQtdeStub: SinonStub;
 
   before(() => {
     findAllStub = stub(Operacao, 'findAll');
     createStub = stub(Operacao, 'create');
     clientesGetByCodStub = stub(clientesService, 'getByCod');
-    clientesUpdateSaldoStub = stub(clientesService, 'updateSaldo');
+    // clientesUpdateSaldoStub = stub(clientesService, 'updateSaldo');
     ativosGetByCodStub = stub(ativosService, 'getByCod');
-    ativosUpdateQtdeStub = stub(ativosService, 'updateQtde');
+    // ativosUpdateQtdeStub = stub(ativosService, 'updateQtde');
     investimentosGetByCodStub = stub(investimentosService, 'getByCod');
-    investimentosUpdateQtdeStub = stub(investimentosService, 'updateQtde');
+    // investimentosUpdateQtdeStub = stub(investimentosService, 'updateQtde');
   });
 
   after(() => {
     findAllStub.restore();
     createStub.restore();
     clientesGetByCodStub.restore();
+    // clientesUpdateSaldoStub.restore();
     ativosGetByCodStub.restore();
+    // ativosUpdateQtdeStub.restore();
     investimentosGetByCodStub.restore();
+    // investimentosUpdateQtdeStub.restore();
   });
 
   describe('method "getByCliente" should', () => {
@@ -96,7 +99,7 @@ describe('Service "Operacoes":', () => {
   });
 
   describe('method "createCompra" should', () => {
-    describe('when asset quantity avaiable is no enough', () => {
+    describe('when asset quantity avaiable is not enough', () => {
       before(() => {
         clientesGetByCodStub.resolves(qtdeNotEnoughMock.cliente);
         ativosGetByCodStub.resolves(qtdeNotEnoughMock.ativo);
@@ -140,19 +143,110 @@ describe('Service "Operacoes":', () => {
 
     describe('when account balance and asset quantity avaiable are enough', () => {
       let operacao: IOperacao;
+      let clientesUpdateSaldoStub: SinonStub;
+      let ativosUpdateQtdeStub: SinonStub;
+      let investimentosUpdateQtdeStub: SinonStub;
 
       before(async () => {
-        clientesGetByCodStub.resolves(balanceAndQtdeEnoushMock.cliente);
-        ativosGetByCodStub.resolves(balanceAndQtdeEnoushMock.ativo);
+        clientesUpdateSaldoStub = stub(clientesService, 'updateSaldo');
+        ativosUpdateQtdeStub = stub(ativosService, 'updateQtde');
+        investimentosUpdateQtdeStub = stub(investimentosService, 'updateQtde');
+
+        clientesGetByCodStub.resolves(balanceAndQtdeEnoughMock.cliente);
+        ativosGetByCodStub.resolves(balanceAndQtdeEnoughMock.ativo);
         investimentosGetByCodStub.resolves(investimentoFullMock);
         createStub.resolves(operacaoFullMock);
-        operacao = await operacoesService.createCompra(balanceAndQtdeEnoushMock.operacao);
+
+        operacao = await operacoesService.createCompra(balanceAndQtdeEnoughMock.operacao);
+      });
+
+      after(() => {
+        clientesUpdateSaldoStub.restore();
+        ativosUpdateQtdeStub.restore();
+        investimentosUpdateQtdeStub.restore();
+
+        clientesGetByCodStub.reset();
+        ativosGetByCodStub.reset();
+        investimentosGetByCodStub.reset();
+        createStub.reset();
+      });
+
+      it('call the updators methods on "Clientes", "Ativos" and "Investimentos" services', () => {
+        expect(clientesUpdateSaldoStub.calledOnce).to.be.true;
+        expect(ativosUpdateQtdeStub.calledOnce).to.be.true;
+        expect(investimentosUpdateQtdeStub.calledOnce).to.be.true;
+      });
+
+      it('call the Operacao.create once', () => {
+        expect(createStub.calledOnce).to.be.true;
+      });
+
+      it('return an object', () => {
+        expect(operacao).to.be.an('object');
+      });
+
+      it('return an object with the follow properties: "codOperacao", "data", "codCliente", '
+        + '"codAtivo", "qtdeAtivo" and "valor', () => {
+        ['codOperacao', 'data', 'codCliente', 'codAtivo', 'qtdeAtivo', 'valor']
+          .forEach((property) => {
+            expect(operacao).to.have.property(property);
+          });
+      });
+    });
+  });
+
+  describe('method "createVenda" should', () => {
+    describe('when client asset quantity is not enough', () => {
+      before(() => {
+        clientesGetByCodStub.resolves(investQtdeNotEnoughMock.cliente);
+        ativosGetByCodStub.resolves(investQtdeNotEnoughMock.ativo);
+        investimentosGetByCodStub.resolves(investQtdeNotEnoughMock.investimento);
       });
 
       after(() => {
         clientesGetByCodStub.reset();
         ativosGetByCodStub.reset();
         investimentosGetByCodStub.reset();
+      });
+
+      it(
+        'throw an error with the message "Quantidade insuficiente de ativos disponíveis para venda"',
+        async () => (
+          expect(operacoesService.createVenda(investQtdeNotEnoughMock.operacao))
+            .to.eventually.be.rejected
+            .and.have.property('message', 'Quantidade insuficiente de ativos disponíveis para venda')
+        ),
+      );
+    });
+
+    describe('when client asset quantity is enough', () => {
+      let operacao: IOperacao;
+      let clientesUpdateSaldoStub: SinonStub;
+      let ativosUpdateQtdeStub: SinonStub;
+      let investimentosUpdateQtdeStub: SinonStub;
+
+      before(async () => {
+        clientesUpdateSaldoStub = stub(clientesService, 'updateSaldo');
+        ativosUpdateQtdeStub = stub(ativosService, 'updateQtde');
+        investimentosUpdateQtdeStub = stub(investimentosService, 'updateQtde');
+
+        clientesGetByCodStub.resolves(investQtdeEnoughMock.cliente);
+        ativosGetByCodStub.resolves(investQtdeEnoughMock.ativo);
+        investimentosGetByCodStub.resolves(investimentoFullMock);
+        createStub.resolves(operacaoFullMock);
+
+        operacao = await operacoesService.createVenda(investQtdeEnoughMock.operacao);
+      });
+
+      after(() => {
+        clientesUpdateSaldoStub.restore();
+        ativosUpdateQtdeStub.restore();
+        investimentosUpdateQtdeStub.restore();
+
+        clientesGetByCodStub.reset();
+        ativosGetByCodStub.reset();
+        investimentosGetByCodStub.reset();
+        createStub.reset();
       });
 
       it('call the updators methods on "Clientes", "Ativos" and "Investimentos" services', () => {
