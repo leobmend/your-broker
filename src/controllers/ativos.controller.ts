@@ -16,7 +16,7 @@ const getBySearch = async (req: Request, res: Response): Promise<Response> => {
 
 const getByCod = async (req: Request, res: Response): Promise<Response> => {
   const { codAtivo } = req.params;
-  const ativo = await ativosService.getByCod(codAtivo);
+  const ativo = await ativosService.getByCod(codAtivo.toUpperCase());
 
   return res.status(StatusCodes.OK).json({ data: ativo });
 };
