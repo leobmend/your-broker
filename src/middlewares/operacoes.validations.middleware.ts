@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import Joi, { ObjectSchema } from 'joi';
 
-import { IOperacao } from '../interfaces/operacoes.interface';
+import { IPostOperacao } from '../interfaces/operacoes.interface';
 
 import HttpError from '../utils/HttpError';
 
@@ -29,8 +29,10 @@ const operacaoValidationMiddleware = (
   _res: Response,
   next: NextFunction,
 ) => {
-  const operacao: IOperacao = req.body;
-  const { error } = operacaoSchema.validate(operacao);
+  const operacao: IPostOperacao = req.body;
+  const { error } = operacaoSchema.validate(
+    { ...operacao, tipo: operacao.tipo.toLowerCase() },
+  );
 
   if (error) throw new HttpError(StatusCodes.BAD_REQUEST, error.message);
 
