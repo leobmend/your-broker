@@ -11,6 +11,15 @@ const swaggerConfig: Options = {
     servers: [
       { url: 'http://your-broker.herokuapp.com', description: 'Production Heroku' },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
   },
   apis: [
     './src/routers/ativos.router.ts',
