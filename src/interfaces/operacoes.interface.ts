@@ -1,7 +1,11 @@
 export interface IPostOperacao {
-  codCliente: number;
+  tipo: 'compra'|'venda';
   codAtivo: string;
   qtdeAtivo: number;
+}
+
+export interface IPostOperacaoFull extends IPostOperacao {
+  codCliente: number;
 }
 
 export interface IOperacao extends IPostOperacao {
