@@ -1,5 +1,6 @@
 {
   "extends": "@tsconfig/node16/tsconfig.json", // estendemos a configuração base para o Node 16
+  "exclude": ["tests/**"],
   "compilerOptions": {
     "target": "es2016",                                 
     "module": "commonjs",
