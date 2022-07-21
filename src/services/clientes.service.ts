@@ -8,6 +8,8 @@ import bcryptUtils from '../utils/bcrypt.util';
 import HttpError from '../utils/HttpError';
 import jwtUtils from '../utils/jwt.util';
 
+const sanitezeNomePattern = /[^a-zA-Z áéíóúã]/g;
+
 const getByCod = async (codCliente: number): Promise<ICliente> => {
   const cliente = await Cliente.findByPk(
     codCliente,
@@ -28,7 +30,7 @@ const create = async (cliente: IPostCliente): Promise<string> => {
   }
 
   const clienteToInsert = {
-    nome: cliente.nome.trim(),
+    nome: cliente.nome.trim().replace(sanitezeNomePattern, ''),
     email: cliente.email.trim(),
     saldo: 0,
     senha: await bcryptUtils.hashPassword(cliente.senha),
