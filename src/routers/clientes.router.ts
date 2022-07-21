@@ -12,6 +12,40 @@ import transacaoValidationMiddleware from '../middlewares/transacoes.validations
 
 const clientesRouter = Router();
 
+/**
+ * @swagger
+ *  tags:
+ *    name: Clientes
+ *    description: Endpoints de clientes
+*/
+
+/**
+ * @swagger
+ *  components:
+ *    schemas:
+ *      Cliente:
+ *        type: object
+ *        required:
+ *          - nome
+ *          - email
+ *          - senha
+ *        properties:
+ *          codCliente:
+ *            type: integer
+ *          nome:
+ *            type: string
+ *          email:
+ *            type: string
+ *          senha:
+ *            type: string
+ *          saldo:
+ *            type: decimal
+ *        example:
+ *          nome: John Doe
+ *          email: john@test.com
+ *          senha: 123123
+*/
+
 clientesRouter.get(
   '/:codCliente',
   authenticationMiddleware,
