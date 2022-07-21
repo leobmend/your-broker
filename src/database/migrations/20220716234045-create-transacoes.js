@@ -20,6 +20,13 @@ module.exports = {
         },
         onDelete: 'CASCADE',
       },
+      tipo: {
+        type: Sequelize.STRING(10),
+        references: {
+          model: 'movimentos',
+          key: 'tipo',
+        },
+      },
       valor: {
         allowNull: false,
         type: Sequelize.DECIMAL(10, 2),

@@ -1,18 +1,20 @@
-const { getAtivos } = require('../../../build/external/b3.API.model');
-
 module.exports = {
   up: async (queryInterface) => {
-    const seed = await getAtivos();
     await queryInterface.bulkInsert(
-      'ativos',
-      seed,
+      'movimentos',
+      [
+        { tipo: 'compra' },
+        { tipo: 'venda' },
+        { tipo: 'deposito' },
+        { tipo: 'saque' },
+      ],
       {},
     );
   },
 
   down: async (queryInterface) => {
     await queryInterface.bulkDelete(
-      'ativos',
+      'movimentos',
       null,
       {},
     );
