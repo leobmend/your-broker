@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 
 import { ICliente } from '../interfaces/clientes.interface';
-import { IOperacao, IPostOperacao } from '../interfaces/operacoes.interface';
+import { IOperacao, IPostOperacaoFull } from '../interfaces/operacoes.interface';
 
 import clientesService from './clientes.service';
 import ativosService from './ativos.service';
@@ -19,7 +19,7 @@ const getByCliente = async (codCliente: number): Promise<IOperacao[]> => {
   return operacoes;
 };
 
-const createCompra = async (operacao: IPostOperacao): Promise<IOperacao> => {
+const createCompra = async (operacao: IPostOperacaoFull): Promise<IOperacao> => {
   const cliente = await clientesService.getByCod(operacao.codCliente) as ICliente;
   const ativo = await ativosService.getByCod(operacao.codAtivo);
 
@@ -61,7 +61,7 @@ const createCompra = async (operacao: IPostOperacao): Promise<IOperacao> => {
   return newOperacao;
 };
 
-const createVenda = async (operacao: IPostOperacao): Promise<IOperacao> => {
+const createVenda = async (operacao: IPostOperacaoFull): Promise<IOperacao> => {
   const cliente = await clientesService.getByCod(operacao.codCliente);
   const ativo = await ativosService.getByCod(operacao.codAtivo);
   const investimento = await investimentosService.getByCod(operacao.codCliente, operacao.codAtivo);
@@ -85,7 +85,7 @@ const createVenda = async (operacao: IPostOperacao): Promise<IOperacao> => {
   await investimentosService.updateQtde(newInvestimento);
 
   const newOperacao = await Operacao.create(
-    { ...operacao, valor: ativo.valor, qtdeAtivo: -operacao.qtdeAtivo },
+    { ...operacao, valor: ativo.valor },
   );
   return newOperacao;
 };
