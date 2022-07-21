@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { IOperacao } from '../interfaces/operacoes.interface';
+import { IOperacao, IPostOperacaoFull } from '../interfaces/operacoes.interface';
 
 import operacoesService from '../services/operacoes.service';
 
@@ -16,14 +16,15 @@ const create = async (req: Request, res: Response): Promise<Response> => {
   const { codCliente } = req.params;
   const { tipo, codAtivo, qtdeAtivo } = req.body;
 
-  const operacao = {
+  const operacao: IPostOperacaoFull = {
     codCliente: parseInt(codCliente, 10),
+    tipo: tipo.toLowerCase(),
     codAtivo,
     qtdeAtivo,
   };
 
   let newOperacao: IOperacao;
-  if (tipo === 'compra') {
+  if (tipo.toLowerCase() === 'compra') {
     newOperacao = await operacoesService.createCompra(operacao);
   } else {
     newOperacao = await operacoesService.createVenda(operacao);

@@ -19,11 +19,12 @@ const create = async (req: Request, res: Response): Promise<Response> => {
 
   const transacao = {
     codCliente: parseInt(codCliente, 10),
+    tipo: tipo.toLowerCase(),
     valor,
   };
 
   let newTransacao: ITransacao;
-  if (tipo === 'deposito') {
+  if (tipo.toLowerCase() === 'deposito') {
     newTransacao = await transacoesService.createDeposito(transacao);
   } else {
     newTransacao = await transacoesService.createSaque(transacao);
