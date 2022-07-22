@@ -14,7 +14,6 @@ const getByCliente = async (codCliente: number): Promise<IOperacao[]> => {
   await clientesService.getByCod(codCliente);
 
   const operacoes = await Operacao.findAll({ where: { codCliente } });
-  if (!operacoes.length) throw new HttpError(StatusCodes.NOT_FOUND, 'Nenhuma operação encontrada');
 
   return operacoes;
 };

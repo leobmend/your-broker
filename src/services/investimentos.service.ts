@@ -22,7 +22,6 @@ const getByCliente = async (codCliente: number): Promise<IGetInvestimento[]> => 
   await clientesService.getByCod(codCliente);
 
   const investimentos = await Investimento.findAll({ where: { codCliente } });
-  if (!investimentos.length) throw new HttpError(StatusCodes.NOT_FOUND, 'Nenhum investimento encontrado');
 
   const promises = investimentos.map(
     async (investimento: IInvestimento): Promise<IGetInvestimento> => {

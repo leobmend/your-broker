@@ -12,7 +12,6 @@ const getByCliente = async (codCliente: number): Promise<ITransacao[]> => {
   await clientesService.getByCod(codCliente);
 
   const transacoes = await Transacao.findAll({ where: { codCliente } });
-  if (!transacoes.length) throw new HttpError(StatusCodes.NOT_FOUND, 'Nenhuma transação encontrada');
 
   return transacoes;
 };
