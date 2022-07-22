@@ -26,7 +26,7 @@ const create = async (cliente: IPostCliente): Promise<string> => {
     { where: { email: cliente.email }, attributes: { exclude: ['senha'] } },
   );
   if (clienteByEmail) {
-    throw new HttpError(StatusCodes.CONFLICT, 'Cadastro inválido');
+    throw new HttpError(StatusCodes.BAD_REQUEST, 'Cadastro inválido');
   }
 
   const clienteToInsert = {
