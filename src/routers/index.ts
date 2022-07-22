@@ -1,8 +1,8 @@
 import express from 'express';
 
+import credenciaisRouter from './credenciais.router';
 import ativosRouter from './ativos.router';
 import clientesRouter from './clientes.router';
-import credenciaisRouter from './credenciais.router';
 
 const router = express.Router();
 

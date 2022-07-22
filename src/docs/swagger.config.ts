@@ -9,7 +9,8 @@ const swaggerConfig: Options = {
       version: '1.0',
     },
     servers: [
-      { url: 'http://your-broker.herokuapp.com', description: 'Production Heroku' },
+      { url: 'https://your-broker.herokuapp.com/', description: 'Production Heroku' },
+      // { url: 'http://localhost:3001/', description: 'Development' },
     ],
     components: {
       securitySchemes: {
