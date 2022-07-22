@@ -43,6 +43,7 @@ export const qtdeNotEnoughMock = {
     codCliente: 1,
     codAtivo: 'ABC1',
     qtdeAtivo: 20,
+    tipo: 'compra',
   },
 };
 
@@ -63,6 +64,7 @@ export const balanceNotEnoughMock = {
     codCliente: 1,
     codAtivo: 'ABC1',
     qtdeAtivo: 20,
+    tipo: 'compra',
   },
 };
 
@@ -83,6 +85,7 @@ export const balanceAndQtdeEnoughMock = {
     codCliente: 1,
     codAtivo: 'ABC1',
     qtdeAtivo: 20,
+    tipo: 'compra',
   },
 };
 
@@ -108,6 +111,7 @@ export const investQtdeNotEnoughMock = {
     codCliente: 1,
     codAtivo: 'ABC1',
     qtdeAtivo: 10,
+    tipo: 'venda',
   },
 };
 
@@ -133,5 +137,6 @@ export const investQtdeEnoughMock = {
     codCliente: 1,
     codAtivo: 'ABC1',
     qtdeAtivo: 10,
+    tipo: 'venda',
   },
 };

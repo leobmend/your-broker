@@ -7,6 +7,7 @@ export const transacaoFullMock = {
 
 export const transacaoPostMock = {
   codCliente: 1,
+  tipo: 'deposito',
   valor: 1000,
 };
 
@@ -34,6 +35,7 @@ export const balanceNotEnoughMock = {
   },
   transacao: {
     codCliente: 1,
+    tipo: 'saque',
     valor: 1000,
   },
 };
@@ -47,6 +49,7 @@ export const balanceEnoughMock = {
   },
   transacao: {
     codCliente: 1,
+    tipo: 'saque',
     valor: 500,
   },
 };
