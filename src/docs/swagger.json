@@ -4,7 +4,6 @@
     "title": "Your Broker API",
     "description": "API RESTful que simula o funcionamento de uma corretora de investimentos",
     "contact": {
-      "github": "https://github.com/leobmend",
       "email": "leo.bmendonca@gmail.com"
     },
     "version": "1.0.0"
@@ -95,19 +94,25 @@
     },
     "/ativos": {
       "get": {
-        "summary": "Retorna até 10 items da lista de ativos a partir de um termo",
+        "summary": "Retorna até 10 items da lista de ativos a partir de um termo de busca",
         "description": "Rota responsável por buscar ativos pelo parâmetro 'termo' definido pelo usuário e então retornar até 10 ativos do resultado. É possível realizar a paginação dos resultados utilizando o parâmetro 'pag'",
         "tags": ["Ativos"],
         "parameters": [
           { 
             "in": "query",
             "name": "termo",
-            "description": "O termo pesquisado nos códigos e nos nomes das empresas dos ativos"
+            "description": "O termo pesquisado nos códigos e nos nomes das empresas dos ativos",
+            "schema": {
+              "type": "string"
+            }
           },
           { 
             "in": "query",
             "name": "pag",
-            "description": "Número da página a ser visualizada"
+            "description": "Número da página a ser visualizada",
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
@@ -141,7 +146,11 @@
           { 
             "in": "path",
             "name": "codAtivo",
-            "description": "Código do ativo"
+            "description": "Código do ativo",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -178,7 +187,10 @@
             "in": "path",
             "name": "codCliente",
             "description": "Código do cliente",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
@@ -215,7 +227,10 @@
             "in": "path",
             "name": "codCliente",
             "description": "Código do cliente",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
@@ -243,93 +258,6 @@
         }
       }
     },
-    "/clientes/{codCliente}/operacoes": {
-      "get": {
-        "summary": "Retorna o histórico de operações do cliente",
-        "description": "Rota responsável pela busca e retorno da lista de operações realizadas pelo cliente, conforme código informado pelo usuário",
-        "tags": ["Operações"],
-        "security": [{ "bearerAuth": [] }],
-        "parameters": [
-          { 
-            "in": "path",
-            "name": "codCliente",
-            "description": "Código do cliente",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Busca realizada com sucesso",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Operação"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Cliente não autorizado"
-          }
-        }
-      },
-      "post": {
-        "summary": "Cadastra uma nova operação",
-        "description": "Rota responsável pelo cadastro de uma nova operação de compra ou venda de ativos, caso as validações sejam satisfeitas com sucesso",
-        "tags": ["Operações"],
-        "security": [{ "bearerAuth": [] }],
-        "parameters": [
-          { 
-            "in": "path",
-            "name": "codCliente",
-            "description": "Código do cliente",
-            "required": true
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Nova Operação"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Busca realizada com sucesso",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "$ref": "#/components/schemas/Operação"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Cliente não autorizado"
-          },
-          "422": {
-            "description": "Operação não registrada por falha nas validações"
-          }
-        }
-      }
-    },
     "/clientes/{codCliente}/transacoes": {
       "get": {
         "summary": "Retorna o histórico de transações do cliente",
@@ -341,7 +269,10 @@
             "in": "path",
             "name": "codCliente",
             "description": "Código do cliente",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
@@ -378,7 +309,10 @@
             "in": "path",
             "name": "codCliente",
             "description": "Código do cliente",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "requestBody": {
@@ -392,8 +326,8 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Busca realizada com sucesso",
+          "201": {
+            "description": "Transação cadastrada com sucesso",
             "content": {
               "application/json": {
                 "schema": {
@@ -413,6 +347,99 @@
           },
           "422": {
             "description": "Transação não registrada por falha nas validações"
+          }
+        }
+      }
+    },
+    "/clientes/{codCliente}/operacoes": {
+      "get": {
+        "summary": "Retorna o histórico de operações do cliente",
+        "description": "Rota responsável pela busca e retorno da lista de operações realizadas pelo cliente, conforme código informado pelo usuário",
+        "tags": ["Operações"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { 
+            "in": "path",
+            "name": "codCliente",
+            "description": "Código do cliente",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Busca realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Operação"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Cliente não autorizado"
+          }
+        }
+      },
+      "post": {
+        "summary": "Cadastra uma nova operação",
+        "description": "Rota responsável pelo cadastro de uma nova operação de compra ou venda de ativos, caso as validações sejam satisfeitas com sucesso",
+        "tags": ["Operações"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { 
+            "in": "path",
+            "name": "codCliente",
+            "description": "Código do cliente",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Nova Operação"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Operação cadastrada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/Operação"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Cliente não autorizado"
+          },
+          "422": {
+            "description": "Operação não registrada por falha nas validações"
           }
         }
       }
@@ -475,18 +502,14 @@
           "email": {
             "type": "string"
           },
-          "senha": {
-            "type": "string"
-          },
           "saldo": {
-            "type": "decimal"
+            "type": "number"
           }
         },
         "example": {
           "codCliente": 1,
           "nome": "John Doe",
           "email": "john@test.com",
-          "senha": "123123",
           "saldo": 11111.11
         }
       },
@@ -503,7 +526,7 @@
             "type": "integer"
           },
           "valor": {
-            "type": "decimal"
+            "type": "number"
           }
         },
         "example": {
@@ -526,7 +549,7 @@
             "type": "integer"
           },
           "valor": {
-            "type": "decimal"
+            "type": "number"
           }
         },
         "example": {
