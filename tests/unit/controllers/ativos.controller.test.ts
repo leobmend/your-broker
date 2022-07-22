@@ -66,12 +66,14 @@ describe('Controller "Ativos":', () => {
     before(() => {
       ativoGetByCodStub = stub(ativosService, 'getByCod');
       ativoGetByCodStub.resolves(ativoFullMock);
+      request.params = { codAtivo: 'ABC1' };
 
       statusStub.returns(response);
     });
 
     after(() => {
       statusStub.reset();
+      request.params = {};
 
       ativoGetByCodStub.restore();
     });

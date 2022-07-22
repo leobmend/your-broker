@@ -87,48 +87,31 @@ describe('Service "Investimentos":', () => {
   });
 
   describe('method "getByCliente" should', () => {
-    describe('when the client has no investment', () => {
-      before(() => {
-        findAllStub.resolves([]);
-      });
+    let investimentos: IGetInvestimento[];
 
-      after(() => {
-        findAllStub.reset();
-      });
-
-      it('throw an error with the message "Nenhum investimento encontrado"', async () => (
-        expect(investimentosService.getByCliente(10))
-          .to.eventually.be.rejected.and.have.property('message', 'Nenhum investimento encontrado')
-      ));
+    before(async () => {
+      findAllStub.resolves(investimentoListMock);
+      getCotacaoStub.resolves(cotacaoMock);
+      investimentos = await investimentosService.getByCliente(1);
     });
 
-    describe('when the client has investments', () => {
-      let investimentos: IGetInvestimento[];
+    after(() => {
+      findAllStub.reset();
+      getCotacaoStub.reset();
+    });
 
-      before(async () => {
-        findAllStub.resolves(investimentoListMock);
-        getCotacaoStub.resolves(cotacaoMock);
-        investimentos = await investimentosService.getByCliente(1);
-      });
+    it('call the Investimento.findAll once', () => {
+      expect(findAllStub.calledOnce).to.be.true;
+    });
 
-      after(() => {
-        findAllStub.reset();
-        getCotacaoStub.reset();
-      });
+    it('return an array', () => {
+      expect(investimentos).to.be.an('array');
+    });
 
-      it('call the Investimento.findAll once', () => {
-        expect(findAllStub.calledOnce).to.be.true;
-      });
-
-      it('return an array', () => {
-        expect(investimentos).to.be.an('array');
-      });
-
-      it('return an array of objects, containing follow properties: '
+    it('return an array of objects, containing follow properties: '
         + 'codCliente", "codAtivo" and "qtdeAtivo"', () => {
-        ['codCliente', 'codAtivo', 'qtdeAtivo', 'valor'].forEach((property) => {
-          expect(investimentos[0]).to.have.property(property);
-        });
+      ['codCliente', 'codAtivo', 'qtdeAtivo', 'valor'].forEach((property) => {
+        expect(investimentos[0]).to.have.property(property);
       });
     });
   });

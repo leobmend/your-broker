@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import Joi, { ObjectSchema } from 'joi';
 
-import { ITransacao } from '../interfaces/transacoes.interface';
+import { IPostTrancasao } from '../interfaces/transacoes.interface';
 
 import HttpError from '../utils/HttpError';
 
@@ -25,8 +25,10 @@ const transacaoValidationMiddleware = (
   _res: Response,
   next: NextFunction,
 ) => {
-  const transacao: ITransacao = req.body;
-  const { error } = transacaoSchema.validate(transacao);
+  const transacao: IPostTrancasao = req.body;
+  const { error } = transacaoSchema.validate(
+    { ...transacao, tipo: transacao.tipo.toLowerCase() },
+  );
 
   if (error) throw new HttpError(StatusCodes.BAD_REQUEST, error.message);
 

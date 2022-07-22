@@ -5,7 +5,7 @@ import chaiAsPromised from 'chai-as-promised';
 import transacoesService from '../../../src/services/transacoes.service';
 import clientesService from '../../../src/services/clientes.service';
 
-import { ITransacao } from '../../../src/interfaces/transacoes.interface';
+import { IPostTransacaoFull, ITransacao } from '../../../src/interfaces/transacoes.interface';
 
 import Transacao from '../../../src/database/models/transacoes.model';
 
@@ -35,46 +35,29 @@ describe('Service "Transacoes":', () => {
   });
 
   describe('method "getByCliente" should', () => {
-    describe('when client has no transaction registered', () => {
-      before(() => {
-        findAllStub.resolves([]);
-      });
+    let transacoes: ITransacao[];
 
-      after(() => {
-        findAllStub.reset();
-      });
-
-      it('throw an error with the message "Nenhuma transação encontrada"', async () => (
-        expect(transacoesService.getByCliente(10))
-          .to.eventually.be.rejected.and.have.property('message', 'Nenhuma transação encontrada')
-      ));
+    before(async () => {
+      findAllStub.resolves(transacaoFullListMock);
+      transacoes = await transacoesService.getByCliente(1);
     });
 
-    describe('when the client has transactions registered', () => {
-      let transacoes: ITransacao[];
+    after(() => {
+      findAllStub.reset();
+    });
 
-      before(async () => {
-        findAllStub.resolves(transacaoFullListMock);
-        transacoes = await transacoesService.getByCliente(1);
-      });
+    it('call the Investimento.findAll once', () => {
+      expect(findAllStub.calledOnce).to.be.true;
+    });
 
-      after(() => {
-        findAllStub.reset();
-      });
+    it('return an array', () => {
+      expect(transacoes).to.be.an('array');
+    });
 
-      it('call the Investimento.findAll once', () => {
-        expect(findAllStub.calledOnce).to.be.true;
-      });
-
-      it('return an array', () => {
-        expect(transacoes).to.be.an('array');
-      });
-
-      it('return an array of objects, containing follow properties: "codTransacao", "data", "codCliente" '
+    it('return an array of objects, containing follow properties: "codTransacao", "data", "codCliente" '
         + 'and "valor', () => {
-        ['codTransacao', 'data', 'codCliente', 'valor'].forEach((property) => {
-          expect(transacoes[0]).to.have.property(property);
-        });
+      ['codTransacao', 'data', 'codCliente', 'valor'].forEach((property) => {
+        expect(transacoes[0]).to.have.property(property);
       });
     });
   });
@@ -88,7 +71,7 @@ describe('Service "Transacoes":', () => {
 
       clientesGetByCodStub.resolves(clienteGetMock);
       createStub.resolves(transacaoFullMock);
-      transacao = await transacoesService.createDeposito(transacaoPostMock);
+      transacao = await transacoesService.createDeposito(transacaoPostMock as IPostTransacaoFull);
     });
 
     after(() => {
@@ -131,7 +114,7 @@ describe('Service "Transacoes":', () => {
       });
 
       it('throw an error with the message "Saldo insuficiente"', async () => (
-        expect(transacoesService.createSaque(balanceNotEnoughMock.transacao))
+        expect(transacoesService.createSaque(balanceNotEnoughMock.transacao as IPostTransacaoFull))
           .to.eventually.be.rejected.and.have.property('message', 'Saldo insuficiente')
       ));
     });
@@ -146,7 +129,9 @@ describe('Service "Transacoes":', () => {
         clientesGetByCodStub.resolves(balanceEnoughMock.cliente);
         createStub.resolves(transacaoFullMock);
 
-        transacao = await transacoesService.createSaque(balanceEnoughMock.transacao);
+        transacao = await transacoesService.createSaque(
+          balanceEnoughMock.transacao as IPostTransacaoFull,
+        );
       });
 
       after(() => {

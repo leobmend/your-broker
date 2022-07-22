@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 
 import { ICliente } from '../interfaces/clientes.interface';
-import { IPostTrancasao, ITransacao } from '../interfaces/transacoes.interface';
+import { IPostTransacaoFull, ITransacao } from '../interfaces/transacoes.interface';
 
 import clientesService from './clientes.service';
 import Transacao from '../database/models/transacoes.model';
@@ -12,12 +12,11 @@ const getByCliente = async (codCliente: number): Promise<ITransacao[]> => {
   await clientesService.getByCod(codCliente);
 
   const transacoes = await Transacao.findAll({ where: { codCliente } });
-  if (!transacoes.length) throw new HttpError(StatusCodes.NOT_FOUND, 'Nenhuma transação encontrada');
 
   return transacoes;
 };
 
-const createDeposito = async (transacao: IPostTrancasao): Promise<ITransacao> => {
+const createDeposito = async (transacao: IPostTransacaoFull): Promise<ITransacao> => {
   const cliente = await clientesService.getByCod(transacao.codCliente) as ICliente;
 
   const newSaldo = cliente.saldo + transacao.valor;
@@ -28,16 +27,14 @@ const createDeposito = async (transacao: IPostTrancasao): Promise<ITransacao> =>
   return newTransacao;
 };
 
-const createSaque = async (transacao: Omit<ITransacao, 'codTransacao'|'data'>): Promise<ITransacao> => {
+const createSaque = async (transacao: IPostTransacaoFull): Promise<ITransacao> => {
   const cliente = await clientesService.getByCod(transacao.codCliente) as ICliente;
 
   const newSaldo = cliente.saldo - transacao.valor;
   if (newSaldo < 0) throw new HttpError(StatusCodes.UNPROCESSABLE_ENTITY, 'Saldo insuficiente');
   await clientesService.updateSaldo(transacao.codCliente, newSaldo);
 
-  const newTransacao = await Transacao.create(
-    { ...transacao, valor: -1 * transacao.valor },
-  ) as ITransacao;
+  const newTransacao = await Transacao.create({ ...transacao });
 
   return newTransacao;
 };

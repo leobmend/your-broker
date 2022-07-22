@@ -1,5 +1,5 @@
 import {
-  Model, INTEGER, DECIMAL, DATE, NOW,
+  Model, INTEGER, DECIMAL, STRING, DATE, NOW,
 } from 'sequelize';
 import db from '.';
 import Cliente from './clientes.model';
@@ -10,6 +10,8 @@ class Transacao extends Model {
   data!: Date;
 
   codCliente!: number;
+
+  tipo!: 'deposito'|'saque';
 
   valor!: number;
 }
@@ -25,6 +27,10 @@ Transacao.init({
     type: DATE,
     allowNull: false,
     defaultValue: NOW,
+  },
+  tipo: {
+    type: STRING(10),
+    allowNull: false,
   },
   valor: {
     type: DECIMAL(10, 2),

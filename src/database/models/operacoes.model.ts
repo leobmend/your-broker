@@ -1,5 +1,5 @@
 import {
-  Model, INTEGER, DECIMAL, DATE, NOW,
+  Model, INTEGER, STRING, DECIMAL, DATE, NOW,
 } from 'sequelize';
 import db from '.';
 import Ativo from './ativos.model';
@@ -15,6 +15,8 @@ class Operacao extends Model {
   codAtivo!: string;
 
   qtdeAtivo!: number;
+
+  tipo!: 'compra'|'venda';
 
   valor!: number;
 }
@@ -33,6 +35,10 @@ Operacao.init({
   },
   qtdeAtivo: {
     type: INTEGER,
+    allowNull: false,
+  },
+  tipo: {
+    type: STRING(10),
     allowNull: false,
   },
   valor: {

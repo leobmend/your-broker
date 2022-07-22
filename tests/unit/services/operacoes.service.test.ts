@@ -7,7 +7,7 @@ import clientesService from '../../../src/services/clientes.service';
 import ativosService from '../../../src/services/ativos.service';
 import investimentosService from '../../../src/services/investimentos.service';
 
-import { IOperacao } from '../../../src/interfaces/operacoes.interface';
+import { IOperacao, IPostOperacaoFull } from '../../../src/interfaces/operacoes.interface';
 
 import Operacao from '../../../src/database/models/operacoes.model';
 
@@ -44,48 +44,31 @@ describe('Service "Operacoes":', () => {
   });
 
   describe('method "getByCliente" should', () => {
-    describe('when client has no operation registered', () => {
-      before(() => {
-        findAllStub.resolves([]);
-      });
+    let operacoes: IOperacao[];
 
-      after(() => {
-        findAllStub.reset();
-      });
-
-      it('throw an error with the message "Nenhuma operação encontrada"', async () => (
-        expect(operacoesService.getByCliente(10))
-          .to.eventually.be.rejected.and.have.property('message', 'Nenhuma operação encontrada')
-      ));
+    before(async () => {
+      findAllStub.resolves(operacaoFullListMock);
+      operacoes = await operacoesService.getByCliente(1);
     });
 
-    describe('when the client has operations registered', () => {
-      let operacoes: IOperacao[];
+    after(() => {
+      findAllStub.reset();
+    });
 
-      before(async () => {
-        findAllStub.resolves(operacaoFullListMock);
-        operacoes = await operacoesService.getByCliente(1);
-      });
+    it('call the Operacao.findAll once', () => {
+      expect(findAllStub.calledOnce).to.be.true;
+    });
 
-      after(() => {
-        findAllStub.reset();
-      });
+    it('return an array', () => {
+      expect(operacoes).to.be.an('array');
+    });
 
-      it('call the Operacao.findAll once', () => {
-        expect(findAllStub.calledOnce).to.be.true;
-      });
-
-      it('return an array', () => {
-        expect(operacoes).to.be.an('array');
-      });
-
-      it('return an array of objects, containing follow properties: "codOperacao", "data", '
+    it('return an array of objects, containing follow properties: "codOperacao", "data", '
         + '"codCliente", "codAtivo", "qtdeAtivo" and "valor', () => {
-        ['codOperacao', 'data', 'codCliente', 'codAtivo', 'qtdeAtivo', 'valor']
-          .forEach((property) => {
-            expect(operacoes[0]).to.have.property(property);
-          });
-      });
+      ['codOperacao', 'data', 'codCliente', 'codAtivo', 'qtdeAtivo', 'valor']
+        .forEach((property) => {
+          expect(operacoes[0]).to.have.property(property);
+        });
     });
   });
 
@@ -104,7 +87,7 @@ describe('Service "Operacoes":', () => {
       it(
         'throw an error with the message "Quantidade insuficiente de ativos disponíveis para compra"',
         async () => (
-          expect(operacoesService.createCompra(qtdeNotEnoughMock.operacao))
+          expect(operacoesService.createCompra(qtdeNotEnoughMock.operacao as IPostOperacaoFull))
             .to.eventually.be.rejected
             .and.have.property('message', 'Quantidade insuficiente de ativos disponíveis para compra')
         ),
@@ -125,7 +108,7 @@ describe('Service "Operacoes":', () => {
       it(
         'throw an error with the message "Saldo insuficiente para realizar compra"',
         async () => (
-          expect(operacoesService.createCompra(balanceNotEnoughMock.operacao))
+          expect(operacoesService.createCompra(balanceNotEnoughMock.operacao as IPostOperacaoFull))
             .to.eventually.be.rejected
             .and.have.property('message', 'Saldo insuficiente para realizar compra')
         ),
@@ -148,7 +131,9 @@ describe('Service "Operacoes":', () => {
         investimentosGetByCodStub.resolves(investimentoFullMock);
         createStub.resolves(operacaoFullMock);
 
-        operacao = await operacoesService.createCompra(balanceAndQtdeEnoughMock.operacao);
+        operacao = await operacoesService.createCompra(
+          balanceAndQtdeEnoughMock.operacao as IPostOperacaoFull,
+        );
       });
 
       after(() => {
@@ -203,7 +188,9 @@ describe('Service "Operacoes":', () => {
       it(
         'throw an error with the message "Quantidade insuficiente de ativos disponíveis para venda"',
         async () => (
-          expect(operacoesService.createVenda(investQtdeNotEnoughMock.operacao))
+          expect(operacoesService.createVenda(
+            investQtdeNotEnoughMock.operacao as IPostOperacaoFull,
+          ))
             .to.eventually.be.rejected
             .and.have.property('message', 'Quantidade insuficiente de ativos disponíveis para venda')
         ),
@@ -226,7 +213,9 @@ describe('Service "Operacoes":', () => {
         investimentosGetByCodStub.resolves(investimentoFullMock);
         createStub.resolves(operacaoFullMock);
 
-        operacao = await operacoesService.createVenda(investQtdeEnoughMock.operacao);
+        operacao = await operacoesService.createVenda(
+          investQtdeEnoughMock.operacao as IPostOperacaoFull,
+        );
       });
 
       after(() => {

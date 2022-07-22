@@ -9,7 +9,7 @@ describe('Model "Operacao":', () => {
   it(
     'should have the follow properties: "codOperacao", "data", "codCliente", "codAtivo", "qtdeAtivo" and "valor"',
     () => {
-      ['codOperacao', 'data', 'codCliente', 'codAtivo', 'qtdeAtivo', 'valor'].forEach((property) => {
+      ['codOperacao', 'data', 'codCliente', 'codAtivo', 'qtdeAtivo', 'tipo', 'valor'].forEach((property) => {
         expect(operacao).to.have.property(property);
       });
     },

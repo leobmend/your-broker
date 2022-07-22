@@ -7,9 +7,11 @@ import HttpError from '../utils/HttpError';
 import jwt from '../utils/jwt.util';
 
 const authenticationMiddleware = (req: IAuthRequest, _res: Response, next: NextFunction): void => {
-  const token = req.headers.authorization;
+  const auth = req.headers.authorization;
 
-  if (!token) throw new HttpError(StatusCodes.UNAUTHORIZED, 'Token não encontrado');
+  if (!auth) throw new HttpError(StatusCodes.UNAUTHORIZED, 'Token não encontrado');
+
+  const [, token] = auth.split(' ');
 
   let decoded;
   try {
