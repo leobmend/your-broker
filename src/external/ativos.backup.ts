@@ -1,4 +1,4 @@
-﻿import { IAtivo } from '../interfaces/ativos.interface';
+import { IAtivo } from '../interfaces/ativos.interface';
 
 const ativosBackup: IAtivo[] = [
   {
