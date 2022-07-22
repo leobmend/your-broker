@@ -21,8 +21,8 @@ const getBySearch = async (
   const ativos = await Ativo.findAll({
     where: {
       [Op.or]: [
-        { empresa: { [Op.like]: `%${termo}%` } },
-        { codAtivo: { [Op.like]: `%${termo}%` } },
+        { empresa: { [Op.like]: `%${termo.toUpperCase()}%` } },
+        { codAtivo: { [Op.like]: `%${termo.toUpperCase()}%` } },
       ],
     },
   });
