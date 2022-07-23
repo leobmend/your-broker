@@ -1,3 +1,9 @@
+export interface IPatchCliente {
+  nome?: string,
+  email?: string,
+  senha?: string,
+}
+
 interface NomeEmail {
   nome: string;
   email: string;

@@ -1,6 +1,8 @@
 import { StatusCodes } from 'http-status-codes';
 
-import { ICliente, IPostCliente, IPostLogin } from '../interfaces/clientes.interface';
+import {
+  ICliente, IPatchCliente, IPostCliente, IPostLogin,
+} from '../interfaces/clientes.interface';
 
 import Cliente from '../database/models/clientes.model';
 
@@ -8,7 +10,15 @@ import bcryptUtils from '../utils/bcrypt.util';
 import HttpError from '../utils/HttpError';
 import jwtUtils from '../utils/jwt.util';
 
-const sanitezeNomePattern = /[^a-zA-Z áéíóúã]/g;
+const checkIfEmailExists = async (email: string): Promise<void> => {
+  const clienteByEmail = await Cliente.findOne(
+    { where: { email }, attributes: { exclude: ['senha'] } },
+  );
+
+  if (clienteByEmail) {
+    throw new HttpError(StatusCodes.BAD_REQUEST, 'Cadastro inválido');
+  }
+};
 
 const getByCod = async (codCliente: number): Promise<ICliente> => {
   const cliente = await Cliente.findByPk(
@@ -22,16 +32,10 @@ const getByCod = async (codCliente: number): Promise<ICliente> => {
 };
 
 const create = async (cliente: IPostCliente): Promise<string> => {
-  const clienteByEmail = await Cliente.findOne(
-    { where: { email: cliente.email }, attributes: { exclude: ['senha'] } },
-  );
-  if (clienteByEmail) {
-    throw new HttpError(StatusCodes.BAD_REQUEST, 'Cadastro inválido');
-  }
+  await checkIfEmailExists(cliente.email);
 
   const clienteToInsert = {
-    nome: cliente.nome.trim().replace(sanitezeNomePattern, ''),
-    email: cliente.email.trim(),
+    ...cliente,
     saldo: 0,
     senha: await bcryptUtils.hashPassword(cliente.senha),
   };
@@ -40,6 +44,38 @@ const create = async (cliente: IPostCliente): Promise<string> => {
   const jwtToken = jwtUtils.generateToken(newCliente.codCliente);
 
   return jwtToken;
+};
+
+const editProfile = async (codCliente: number, cliente: IPostCliente): Promise<ICliente> => {
+  const oldCliente = await getByCod(codCliente);
+
+  const patchCliente: IPatchCliente = {};
+
+  if (cliente.nome) {
+    patchCliente.nome = cliente.nome;
+  }
+  if (cliente.email) {
+    patchCliente.email = cliente.email;
+
+    if (cliente.email !== oldCliente.email) await checkIfEmailExists(cliente.email);
+  }
+  if (cliente.senha) {
+    patchCliente.senha = await bcryptUtils.hashPassword(cliente.senha);
+  }
+
+  await Cliente.update(
+    patchCliente,
+    { where: { codCliente } },
+  );
+
+  const editedCliente = {
+    codCliente,
+    nome: patchCliente.nome || oldCliente.nome,
+    email: patchCliente.email || oldCliente.email,
+    saldo: oldCliente.saldo,
+  };
+
+  return editedCliente;
 };
 
 const authenticate = async (login: IPostLogin): Promise<string> => {
@@ -66,6 +102,7 @@ const updateSaldo = async (codCliente: number, saldo: number): Promise<void> => 
 const clientesService = {
   getByCod,
   create,
+  editProfile,
   authenticate,
   updateSaldo,
 };

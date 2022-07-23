@@ -10,8 +10,17 @@ const getByCod = async (req: Request, res: Response): Promise<Response> => {
   return res.status(StatusCodes.OK).json({ data: cliente });
 };
 
+const editProfile = async (req: Request, res: Response): Promise<Response> => {
+  const { codCliente } = req.params;
+
+  const editedCliente = await clientesService.editProfile(parseInt(codCliente, 10), req.body);
+
+  return res.status(StatusCodes.OK).json({ data: editedCliente });
+};
+
 const clientesController = {
   getByCod,
+  editProfile,
 };
 
 export default clientesController;

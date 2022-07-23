@@ -7,6 +7,7 @@ import transacoesController from '../controllers/transacoes.controller';
 
 import authenticationMiddleware from '../middlewares/authentication.middleware';
 import authorizationMiddleware from '../middlewares/authorization.middleware';
+import { clientePatchValidationMiddleware } from '../middlewares/credenciais.validations.middleware';
 import operacaoValidationMiddleware from '../middlewares/operacoes.validations.middleware';
 import transacaoValidationMiddleware from '../middlewares/transacoes.validations.middleware';
 
@@ -17,6 +18,14 @@ clientesRouter.get(
   authenticationMiddleware,
   authorizationMiddleware,
   clientesController.getByCod,
+);
+
+clientesRouter.patch(
+  '/:codCliente',
+  authenticationMiddleware,
+  authorizationMiddleware,
+  clientePatchValidationMiddleware,
+  clientesController.editProfile,
 );
 
 clientesRouter.get(
