@@ -1,5 +1,7 @@
 # **YOUR BROKER API**   :bank: :chart_with_upwards_trend:
 
+### **Resumo**
+
 Esta é uma API REST que simula o funcionamento de uma corretora de investimentos, proposta pelo case técnico para o processo seletivo da XP Inc., direcionado aos alunos da Turma XP/Trybe.
 
 Utilizando o protocolo HTTP, a API possui sistema de autenticação JWT, permitindo aos usuários se cadastrarem e realizarem login, além de realizarem operações específicas sobre seus ativos e contas da corretora.
@@ -11,6 +13,8 @@ Testes unitários automatizados foram desenvolvidos utilizando os frameworks `Mo
 Foi realizada a documentação da API utilizando o `Swagger UI` e as especificações do `OpenAPI 3.0.0` .
 
 Todo o desenvolvimento do código foi feito utilizando o `Docker` para garantir um ambiente desenvolvimento homogêneo. Além disso, o deployment, feito na plataforma `Heroku`, também utilizou de containerização, carregando para o ambiente de produção a homogeneização citada anteriormente.
+
+> [Documentação Técnica da API em Produção](https://your-broker.herokuapp.com/docs)
 
 ---
 
@@ -185,6 +189,8 @@ O banco de dados selecionado para o *deployment* foi o `PostgreSQL`, através da
 
 Devido ao *deployment* em modalidade *free*, o `Heroku` realiza o chamado *idling*, ou hibernação em tradução livre. Assim, após um período de inatividade da aplicação (sem requisições), ela é colocada neste estado hibernativo. A próxima requisição feita terá que aguardar a inicialização do serviço novamente. Causando um * delay* que, normalmente, é curto e quase imperceptível. Porém, em testes próprios ao longo do desenvolvimento, esse delay causou *crashs* e necessitou o recarregamento do navegador ou do `Postman`.
 
+Pode ser acessado [aqui](https://your-broker.herokuapp.com/docs/)!
+
 ---
 
 ## **CASE TÉCNICO XP**   :office:
@@ -269,7 +275,7 @@ A seguir, a lista completa de tecnologias utilizadas com suas respectivas docume
 
 ## **CONTATOS** :speech_balloon:
 
-Para qualquer dúvida, critica, sugestão ou comentário, estou ansioso pelo seu contato!
+Para qualquer dúvida, critica, sugestão ou comentário, por favor entre em contato!
 
 [Meu portfólio](https://leobmend.github.io) contêm esse e outros projetos de desenvolvimento web, fique à vontade para conferir!
 
