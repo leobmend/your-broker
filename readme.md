@@ -1,4 +1,4 @@
-# **Your Broker API** :bank: :chart_with_upwards_trend:
+# **YOUR BROKER API** :bank: :chart_with_upwards_trend:
 
 Esta é uma API REST que simula o funcionamento de uma corretora de investimentos, proposta pelo case técnico para o processo seletivo da XP Inc., direcionado aos alunos da Turma XP/Trybe.
 
@@ -18,7 +18,7 @@ Todo o desenvolvimento do código foi feito utilizando o `Docker` para garantir 
 
 O diagrama de entidade-relacionamento foi idealizado pensando na melhor representação das entidades presentes em uma plataforma de investimentos de uma corretora. Além disso, levou-se em conta pontos para suprir possíveis e óbvias necessidades de um front-end que consome tais informações quando o assunto é o setor financeiro e o uso deste por um cliente.
 
-![Diagrama de Entidade-Relacionamento](./der.png)
+![Diagrama de Entidade-Relacionamento](./images/der.png)
 
 As entidades principais em ação aqui são os `Clientes` e os `Ativos`. As outras tabelas surgem dos relacionamentos destas e, para melhor entendimento, alguns pontos importantes:
 
@@ -30,9 +30,13 @@ As entidades principais em ação aqui são os `Clientes` e os `Ativos`. As outr
 
 - `Movimentos`: Tabela unicamente para definição fixa dos tipos de movimentos, atrelando os valores possíveis à *primary key* desta. Em `Operações` temos `compra` e `venda`, e em `Transações` temos `deposito` e `saque`. 
 
-> Obs1: A tabela de `Ativos` foi populada no momento da migração do ORM Sequelize, utilizando a lista de empresas monitoradas pela API como referência para os códigos e nomes dos ativos. E a aplicação, na versão atual, não prevê alteração destes. O campo de `qtdeAtivo` (quantidade de ativos disponíveis para a compra) é populado inicialmente de forma aleatória, respeitando um máximo definido arbitrariamente como 1.000.000 (um milhão).
+A tabela de `Ativos` foi populada no momento da migração do ORM Sequelize, utilizando a lista de empresas monitoradas pela API como referência para os códigos e nomes dos ativos. E a aplicação, na versão atual, não prevê alteração destes. 
 
-> Obs2: A ausência do campo `valor` nas tabelas de `Ativos` e `Investimentos` é um ponto importante da modelagem. Embora contra intuitivo, essa ausência ocorreu pois o entendimento foi de que o valor precisa ser verificado exatamente no momento da requisição, para depois ser então apresentado ao front-end e cliente. Assim, não faz sentido armazenar este dado, mas sim consumí-lo de uma API externa entre o momento de requisição e a devida resposta com todas as informações, inclusive o valor. Já em `Operações`, o campo `valor` é o registro do valor no momento da compra ou venda, informação importante para registro.
+O campo de `qtdeAtivo` (quantidade de ativos disponíveis para a compra) é populado inicialmente de forma aleatória, respeitando um máximo definido arbitrariamente como 1.000.000 (um milhão).
+
+A ausência do campo `valor` nas tabelas de `Ativos` e `Investimentos` é um ponto importante da modelagem. Embora contra intuitivo, essa ausência ocorreu pois o entendimento foi de que o valor precisa ser verificado exatamente no momento da requisição, para depois ser então apresentado ao front-end e cliente. 
+
+Assim, não faz sentido armazenar este dado, mas sim consumí-lo de uma API externa entre o momento de requisição e a devida resposta com todas as informações, inclusive o valor. Já em `Operações`, o campo `valor` é o registro do valor no momento da compra ou venda, informação importante para registro.
 
 ---
 
@@ -50,7 +54,9 @@ Como valor da cotação a ser utilizado, foi escolhido o valor do fechamento do 
 
 ## **FUNCIONALIDADES E ROTAS** :wrench:
 
-> Obs: Para detalhamento dos tipos e exemplo de requisições e respostas da API, a documentação utilizando Swagger está presente [aqui](https://your-broker.herokuapp.com/docs)! Infelizmente, devido ao deploy na plataforma `Heroku` em modalidade *free*, a primeira requisição pode falhar devido ao estado de hibernação do servidor. Portanto, favor recarregar a página caso ocorra.
+> Obs: Para detalhamento técnico maior, exemplos de requisições e respostas da API, a documentação utilizando Swagger está [presente aqui](https://your-broker.herokuapp.com/docs)! Esta seção faz uma descrição mais qualitativa e pensando na jornada do cliente.
+
+> :warning: Infelizmente, devido ao deploy na plataforma `Heroku` em modalidade *free*, a primeira requisição pode falhar devido ao estado de hibernação do servidor. Portanto, favor recarregar a página caso ocorra. 
 
 ### **Credenciais**
 
@@ -62,7 +68,9 @@ Clientes já cadastrados podem seguir diretamente para a rota `POST /credenciais
 
 A validação das credenciais é realizada e, caso haja sucesso, um `token` JWT é retornado ao cliente como na rota de cadastro.
 
->  Obs: A senha do cliente, recebida em *plain text* pela API, não é salva diretamente no banco. Utilizando de criptografia `bcrypt` para codificá-la, antes do devido registro.
+> Obs1: O *pattern regex* utilizado para verificação de e-mail válido foi o seguinte: `/\w+([.]\w+)*@\w+([.]\w+)+/i`. Já para a identificação de caracteres especiais no nome e sanitização, foi utilizado o seguinte: `/[^a-zA-Z áéíóúã]/g`. Além disso, aplicou-se o método `.trim()` no nome do cliente. 
+
+> Obs2: A senha do cliente, recebida em *plain text* pela API, não é salva diretamente no banco. Utilizando de criptografia `bcrypt` para codificá-la, antes do devido registro.
 
 ### **Ativos**
 
@@ -72,7 +80,7 @@ Na primeira opção, o retorno sempre será uma lista de ativos encontrados. Par
 
 - `termo`: Parâmetro em tipo `string`, a ser pesquisado por correspondências tanto no campo `codAtivo` (código do ativo), quanto no campo `empresa` (nome registrado da empresa). Se não informado ou vazio, resulta na lista original.
 - `pag`: Parâmetro em tipo `integer`, indica a página de ativos a ser apresentada, com máximo de 10 ativos por requisição.
-- `ordenacao`: Parâmetro à ser implementado em futuras versões.
+- `ordenacao`: Parâmetro e *feature* a serem implementados em futuras versões.
 
 > Obs: Reforçando, todos os dois endpoints realizam a checagem do valor dos ativos (ou ativo) no momento da requisição, consumindo da API externa.
 
@@ -88,13 +96,15 @@ Uma rota de edição `PUT /clientes/{codCliente}` está como prioridade para a p
 
 ### **Transações**
 
-Os clientes são, naturalmente, cadastrados obrigatoriamente com o saldo zerado. Para iniciar a interação, invariavelmente será necessário um depósito. Portanto, através da rota `POST /clientes/{codCliente}/transacoes` e utilizando o campo `tipo` como `deposito` no corpo da requisição, é possível aumentar o saldo do cliente.
+Os clientes são, naturalmente, cadastrados obrigatoriamente com o saldo zerado. Para iniciar a interação com outras funções, invariavelmente será necessário um depósito. Portanto, através da rota `POST /clientes/{codCliente}/transacoes` e utilizando o campo `tipo` como `deposito` no corpo da requisição, é possível aumentar o saldo do cliente.
 
 Analogamente, utilizando o campo `tipo` como `saque`, realiza-se a movimentação inversa, caso o `saldo` do cliente seja suficiente.
 
 Além disso, com a rota `GET /clientes/{codCliente}/transacoes`, o front-end pode acessar as transações do cliente e construir uma interface de histórico de movimentações financeiras da sua conta.
 
 A verificação de **autorização do cliente** também ocorre aqui, impedindo que um cliente visualize as transações de outro cliente ou registre transações em nome de outro cliente.
+
+> Obs: Um middleware de validação do corpo da requisição verifica os tipos dos campos e impede, por exemplo, valores negativos de transações.
 
 ### **Investimentos**
 
@@ -118,9 +128,33 @@ Além disso, com a rota `GET /clientes/{codCliente}/operacoes`, o front-end pode
 
 A verificação de **autorização do cliente** também ocorre aqui, impedindo que um cliente visualize as operações de outro cliente ou registre operações em nome de outro cliente.
 
+> Obs: Um middleware de validação do corpo da requisição verifica os tipos dos campos e impede, por exemplo, valores negativos de quantidade de ativos.
+
 ---
 
-## **CONSIDERAÇÕES: CASE TÉCNICO XP**
+## **TESTES UNITÁRIOS** :mechanical_arm:
+
+Os testes unitários automatizados foram aplicados ao código para garantir o funcionamento como desejado e manter sua coesão durante manutenções futuras. As bibliotecas utilizadas foram: `mocha`, `chai`, `sinon` e `chai-as-promised`.
+
+Para verificação da cobertura dos testes, foi utilizado a blibioteca `nyc`, e atingiu-se a marca de 95% de cobertura.
+
+![Cobertura de testes](./images/coverage.png)
+
+---
+
+## **DEPLOYMENT NO HEROKU**
+
+O deployment da aplicação foi realizado utilziando a plataforma `Heroku`. Para tal, utilizou-se a *stack* de `containers` da aplicação, permitindo assim a definição e uso do `Dockerfile` a ser realizado o *build* de nossa aplicação.
+
+As informações sensíveis e definições de acesso ao banco de dados de produção foram definidas como variáveis de ambiente do container utilizado pelo Heroku (chamadas na plataforma de *config vars*).
+
+O banco de dados selecionado para o *deployment* foi o `PostgreSQL`, através da plataforma `Supabase`. A seleção foi devido à facilidade de uso da plataforma e considerável performance utilizando o servidor da América do Sul (São Paulo, capital).
+
+Devido ao *deployment* em modalidade *free*, o `Heroku` realiza o chamado *idling*, ou hibernação em tradução livre. Assim, após um período de inatividade da aplicação (sem requisições), ela é colocada neste estado hibernativo. A próxima requisição feita terá que aguardar a inicialização do serviço novamente. Causando um * delay* que, normalmente, é curto e quase imperceptível. Porém, em testes próprios ao longo do desenvolvimento, esse delay causou *crashs* e necessitou o recarregamento do navegador ou do `Postman`. 
+
+## **CASE TÉCNICO XP** :office:
+
+### **Considerações**
 
 Durante minha leitura do case proposto e também ao longo do desenvolvimente, senti a necessidade de realizar adições e alterações à estrutura de rotas e aos corpos das requisições propostas. As mudanças tiveram como pilares:
 
@@ -153,3 +187,55 @@ As modificações em relação ao proposto foram as seguintes:
 
 7. Rota proposta: `GET /ativos/{codCliente}`
     * Rota utilizada: `GET /clientes/{codCliente}/investimentos`.
+
+### **Desafios**
+
+Acredito que as decisões que tomei quanto às tecnologias a serem utilizadas me tiraram completamente da minha zona de conforto, e daí surgiram os desafios.
+
+Portanto, os principais desafios foram:
+
+* Utilizar pela primeira vez `TypeScript` com o `Sequelize`.
+* Primeiro contato com o tópico e criação da documentação de uma API. Consequentemente, primeiro contato com a ferramenta `Swagger`.
+
+Além disso, o planejamento para cumprir o prazo, entregando todas as ferramentas que desejava, foi um grande desafio.
+
+---
+
+## **TECNOLOGIAS** :zap:
+
+A seguir, a lista completa de tecnologias utilizadas com suas respectivas documentações:
+
+* Geral
+  * [TypeScript](https://www.typescriptlang.org/docs/)
+  * [Node.js](https://nodejs.org/en/docs/)
+  * [Express](https://expressjs.com/pt-br/starter/installing.html)
+  * [Axios](https://axios-http.com/docs/intro)
+  * [Eslint](https://eslint.org/docs/latest/user-guide/getting-started)
+* Banco de Dados
+  * [Sequelize](https://sequelize.org/docs/v6/getting-started/)
+  * [PostgreSQL](https://www.postgresql.org/docs)
+  * [MySQL](https://dev.mysql.com/doc/)
+* Deployment
+  * [Heroku](https://devcenter.heroku.com/categories/reference)
+  * [Docker](https://docs.docker.com/)
+  * [Supabase](https://supabase.com/docs)
+* Documentação
+  * [Swagger](https://swagger.io/docs/)
+* Testes
+  * [Mocha](https://mochajs.org/)
+  * [Chai](https://www.chaijs.com/api/)
+  * [Sinon](https://sinonjs.org/releases/latest/)
+* Segurança e validação
+  * [Joi](https://joi.dev/api/)
+  * [JWT](https://jwt.io/introduction)
+  * [bcrypt](https://www.npmjs.com/package/bcrypt)
+
+---
+
+## **CONTATOS** :speech_balloon:
+
+Para qualquer dúvida, critica, sugestão ou comentário, estou ansioso pelo seu contato!
+
+[<img src="https://img.shields.io/badge/-LinkedIn-blue?style=flat-square&logo=Linkedin&logoColor=white" />](https://www.linkedin.com/in/leobmend/) [<img src="https://img.shields.io/badge/Gmail-red?style=flat-square&logo=Gmail&logoColor=white" />](mailto:leo.bmendonca@gmail.com)
+
+[Meu portfólio](https://leobmend.github.io) contêm esse e outros projetos de desenvolvimento web, fique a vontade para conferir!
