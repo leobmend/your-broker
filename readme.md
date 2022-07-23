@@ -4,9 +4,9 @@ Esta é uma API REST que simula o funcionamento de uma corretora de investimento
 
 Utilizando o protocolo HTTP, a API possui sistema de autenticação JWT, permitindo aos usuários se cadastrarem e realizarem login, além de realizarem operações específicas sobre seus ativos e contas da corretora.
 
-A API foi construída utilizando `Node.js` e o framework `Express`, a partir de `TypeScript`. A arquitetura escolhida foi a de MSC (Model, Service e Controller), gerando um código organizado e desacoplado. A aplicação foi desenvolvida e testada utilizando bancos de dados `MySql` e `PostgreSQL`, por meio do ORM Sequelize.
+A API foi construída utilizando `Node.js` e o framework `Express`, a partir de `TypeScript`. A arquitetura escolhida foi a de MSC (Model, Service e Controller), gerando um código organizado e desacoplado. A aplicação foi desenvolvida e testada utilizando bancos de dados `MySql` e `PostgreSQL`, por meio do ORM `Sequelize`.
 
-Testes unitários automatizados foram desenvolvidos utilizando os frameworks `Mocha`, `Chai` e `Sinon`, e são verificados em qualquer Pull Request aberto no atual repositório, através de GitHub Actions. Além desta ação, no mesmo momento há também a verificação de estilização do código, utilizando o `Eslint` com predefinições extendidas do padrão *airbnb-base*
+Testes unitários automatizados foram desenvolvidos utilizando os frameworks `Mocha`, `Chai` e `Sinon`, e são verificados em qualquer Pull Request aberto no atual repositório, através de GitHub Actions. Além desta ação, no mesmo momento há também a verificação de estilização do código, utilizando o `Eslint` com predefinições extendidas do padrão *airbnb-base*.
 
 Foi realizada a documentação da API utilizando o `Swagger UI` e as especificações do `OpenAPI 3.0.0` .
 
@@ -30,7 +30,7 @@ As entidades principais em ação aqui são os `Clientes` e os `Ativos`. As outr
 
 - `Movimentos`: Tabela unicamente para definição fixa dos tipos de movimentos, atrelando os valores possíveis à *primary key* desta. Em `Operações` temos `compra` e `venda`, e em `Transações` temos `deposito` e `saque`. 
 
-A tabela de `Ativos` foi populada no momento da migração do ORM Sequelize, utilizando a lista de empresas monitoradas pela API como referência para os códigos e nomes dos ativos. E a aplicação, na versão atual, não prevê alteração destes. 
+A tabela de `Ativos` foi populada no momento da migração do ORM `Sequelize`, utilizando a lista de empresas monitoradas pela API como referência para os códigos e nomes dos ativos. E a aplicação, na versão atual, não prevê alteração destes. 
 
 O campo de `qtdeAtivo` (quantidade de ativos disponíveis para a compra) é populado inicialmente de forma aleatória, respeitando um máximo definido arbitrariamente como 1.000.000 (um milhão).
 
@@ -108,7 +108,7 @@ A verificação de **autorização do cliente** também ocorre aqui, impedindo q
 
 ### **Investimentos**
 
-Para buscas os investimentos atuais de um cliente, é possivel utilizar a rota `GET /clientes/{codCliente}/investimentos`. A resposta conterá a listagem de investimentos para aquele cliente, com a quantidade de ativos em posse e o valor unitário no momento da requisição.
+Para buscar os investimentos atuais de um cliente, é possivel utilizar a rota `GET /clientes/{codCliente}/investimentos`. A resposta conterá a listagem de investimentos para aquele cliente, com a quantidade de ativos em posse e o valor unitário no momento da requisição.
 
 Essa é uma rota ideal para que o front-end consiga construir uma página de carteira de investimentos, listando valores totais por ativos e/ou valores totais.
 
@@ -119,7 +119,7 @@ A verificação de **autorização do cliente** também ocorre aqui para impedir
 Com o saldo positivo, o cliente pode de fato iniciar o uso da corretora. E, com a rota `POST /clientes/{codCliente}/transacoes`, é possível realizar as operações de `compra` ou `venda`, utilizando novamente o campo `tipo` no corpo da requisição para sinalização da movimentação em questão. 
 
 Após resgatar o valor atual da cotação do ativo utilizando a API externa, são feitas algumas verificações. 
-- A operação de compra de ativo só é consolidada caso o estoque do ativo na corretora (`qtdeAtivo` na tabela `Ativos`) seja suficiente e se o saldo do cliente seja suficiente para atender o valor total da operação (valor do ativos multiplicado pela quantidade de ativos).
+- A operação de compra de ativo só é consolidada caso o estoque do ativo na corretora (`qtdeAtivo` na tabela `Ativos`) seja suficiente e se o saldo do cliente seja suficiente para atender o valor total da operação (valor do ativo multiplicado pela quantidade de ativos).
 - A operação de venda de ativo só é consolidada caso o estoque do ativo nos investimentos do cliente seja suficiente.
 
 Se a validação referente a cada caso for bem sucedida, a operação é registrada normalmente e as tabelas de `Clientes`, `Ativos` e `Investimentos` são atualizadas apropriadamente.
@@ -144,7 +144,7 @@ Para verificação da cobertura dos testes, foi utilizado a blibioteca `nyc`, e 
 
 ## **DEPLOYMENT NO HEROKU**
 
-O deployment da aplicação foi realizado utilziando a plataforma `Heroku`. Para tal, utilizou-se a *stack* de `containers` da aplicação, permitindo assim a definição e uso do `Dockerfile` a ser realizado o *build* de nossa aplicação.
+O deployment da aplicação foi realizado utilizando a plataforma `Heroku`. Para tal, utilizou-se a *stack* de `containers` da plataforma, permitindo assim a definição e uso do `Dockerfile` a ser realizado o *build* de nossa aplicação.
 
 As informações sensíveis e definições de acesso ao banco de dados de produção foram definidas como variáveis de ambiente do container utilizado pelo Heroku (chamadas na plataforma de *config vars*).
 
@@ -236,6 +236,6 @@ A seguir, a lista completa de tecnologias utilizadas com suas respectivas docume
 
 Para qualquer dúvida, critica, sugestão ou comentário, estou ansioso pelo seu contato!
 
-[<img src="https://img.shields.io/badge/-LinkedIn-blue?style=flat-square&logo=Linkedin&logoColor=white" />](https://www.linkedin.com/in/leobmend/) [<img src="https://img.shields.io/badge/Gmail-red?style=flat-square&logo=Gmail&logoColor=white" />](mailto:leo.bmendonca@gmail.com)
+[Meu portfólio](https://leobmend.github.io) contêm esse e outros projetos de desenvolvimento web, fique à vontade para conferir!
 
-[Meu portfólio](https://leobmend.github.io) contêm esse e outros projetos de desenvolvimento web, fique a vontade para conferir!
+[<img src="https://img.shields.io/badge/-LinkedIn-blue?style=flat-square&logo=Linkedin&logoColor=white" />](https://www.linkedin.com/in/leobmend/) [<img src="https://img.shields.io/badge/Gmail-red?style=flat-square&logo=Gmail&logoColor=white" />](mailto:leo.bmendonca@gmail.com)
