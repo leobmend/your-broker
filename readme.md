@@ -1,4 +1,4 @@
-# **YOUR BROKER API** :bank: :chart_with_upwards_trend:
+# **YOUR BROKER API**   :bank: :chart_with_upwards_trend:
 
 Esta é uma API REST que simula o funcionamento de uma corretora de investimentos, proposta pelo case técnico para o processo seletivo da XP Inc., direcionado aos alunos da Turma XP/Trybe.
 
@@ -14,7 +14,7 @@ Todo o desenvolvimento do código foi feito utilizando o `Docker` para garantir 
 
 ---
 
-## **MODELAGEM DO BANCO DE DADOS** :open_file_folder:
+## **MODELAGEM DO BANCO DE DADOS**   :open_file_folder:
 
 O diagrama de entidade-relacionamento foi idealizado pensando na melhor representação das entidades presentes em uma plataforma de investimentos de uma corretora. Além disso, levou-se em conta pontos para suprir possíveis e óbvias necessidades de um front-end que consome tais informações quando o assunto é o setor financeiro e o uso deste por um cliente.
 
@@ -40,7 +40,7 @@ Assim, não faz sentido armazenar este dado, mas sim consumí-lo de uma API exte
 
 ---
 
-## **API EXTERNA** :globe_with_meridians:
+## **API EXTERNA**   :globe_with_meridians:
 
 Como sinalizado anteriormente, o valor dos ativos apresenta o desafio de ser apresentado atualizado. Para isso, tentando equilibrar usabilidade e veracidade das informações, foi escolhido a [API-Cotacao-B3](https://api-cotacao-b3.labdo.it/), construída e mantida pelo [LABDO.IT](https://labdo.it), para fins não comerciais.
 
@@ -52,11 +52,15 @@ Como valor da cotação a ser utilizado, foi escolhido o valor do fechamento do 
 
 ---
 
-## **FUNCIONALIDADES E ROTAS** :wrench:
+## **DOCUMENTAÇÂO SWAGGER**   :page_with_curl:
 
-> Obs: Para detalhamento técnico maior, exemplos de requisições e respostas da API, a documentação utilizando Swagger está [presente aqui](https://your-broker.herokuapp.com/docs)! Esta seção faz uma descrição mais qualitativa e pensando na jornada do cliente.
+Para detalhamento técnico maior, exemplos de requisições e respostas da API, a documentação utilizando `Swagger` está [presente aqui](https://your-broker.herokuapp.com/docs)! Na seção próxima à esta, há uma descrição mais qualitativa e pensando na jornada do cliente.
 
-> :warning: Infelizmente, devido ao deploy na plataforma `Heroku` em modalidade *free*, a primeira requisição pode falhar devido ao estado de hibernação do servidor. Portanto, favor recarregar a página caso ocorra. 
+Infelizmente, devido ao deploy na plataforma `Heroku` em modalidade *free*, a primeira requisição pode falhar devido ao estado de hibernação do servidor. Portanto, favor recarregar a página caso ocorra. 
+
+---
+
+## **FUNCIONALIDADES E ROTAS**   :wrench:
 
 ### **Credenciais**
 
@@ -92,7 +96,7 @@ Assim, o front-end pode acessar informações para criar uma página de perfil c
 
 Na requisição desta rota, é necessário que o *header* possua o token JWT em *bearer format*. Além da autenticação do token verificando sua expiração e validade, também é feito a checagem chamada de **autorização do cliente**. Nessa checagem é permitido o prosseguimento da requisição para resposta se, e somente se, o parâmetro `codCliente` proveniente da url for idêntico ao existente dentro do *payload* do token. Evitando que um cliente visualize informações de outro cliente.
 
-Uma rota de edição `PUT /clientes/{codCliente}` está como prioridade para a próxima versão da API.
+Caso seja necessário a edição das informações do cliente, a rota `PUT /clientes/{codCliente}` pode ser utilizada. Ela recebe um dos três parâmetros a seguir pelo corpo da requisição: *nome*, *email* e *senha*. Após validações dos valores informados, é feita a atualização e retornado as informações completas atualizadas do cliente.
 
 ### **Transações**
 
@@ -132,7 +136,7 @@ A verificação de **autorização do cliente** também ocorre aqui, impedindo q
 
 ---
 
-## **TESTES UNITÁRIOS** :mechanical_arm:
+## **TESTES UNITÁRIOS**   :mechanical_arm:
 
 Os testes unitários automatizados foram aplicados ao código para garantir o funcionamento como desejado e manter sua coesão durante manutenções futuras. As bibliotecas utilizadas foram: `mocha`, `chai`, `sinon` e `chai-as-promised`.
 
@@ -142,7 +146,36 @@ Para verificação da cobertura dos testes, foi utilizado a blibioteca `nyc`, e 
 
 ---
 
-## **DEPLOYMENT NO HEROKU**
+## **DESENVOLVIMENTO**  :computer:
+
+Todo o desenvolvimento foi realizado utilizando um ambiente conteinerizado com `Docker`. Na pasta raiz do projeto está presente o arquivo `docker-compose.yml`, responsável por orquestrar a subida de:
+
+ - `db-your-broker`: Container `mysql:8.0.21`, como banco de dados de desenvolvimento.
+ - `node-your-broker`: Container personalizado com base no `node:16-alpine`, como servidor de desenvolvimento para funcionamento do `Express`.
+
+Assim, basta utilizar o comando `docker-compose up -d` para subir o ambiente e, após se acoplar ao container `node-your-broker`, iniciar o desenvolvimento. 
+
+As variáveis de ambiente já estão configuradas para funcionamento automático com este procedimento. Porém, caso seja de interesse, há o arquivo `.env.example` para demonstrar as variáveis de ambiente necessárias para o funcionamento da aplicação corretamente.
+
+### **Scripts**
+
+Lista de scripts para desenvolvimento e gerenciamento da aplicação:
+
+* `npm db:re-migrate`: Compila o código `TypeScript` e realiza o processo de recriação de todas as tabelas do banco de dados, populando novamente logo em seguida.
+* `npm db:reset`: Realiza o mesmo que o comando anterior, porém no percurso exclui a *database* por completo.
+* `npm run lint`: Realiza a verificação de estilização do `eslint`.
+* `npm test`: Roda os testes automatizados presentes na pasta `./tests`.
+* `npm run test:coverage`: Roda os testes automatizados e cria a tabela de cobertura destes.
+* `npm run dev`: Roda a aplicação em constante observação quanto a alteração de algum dos arquivos, reinicializando caso ocorra. Ideal durante o desenvolvimento.
+* `npm start`: Compila o código `TypeScript` e inicializa a aplicação. Scrip utilizado para subir a aplicação em produção.
+
+### **Continuos Integration**
+
+Utilizando as [*GitHub Actions*](https://docs.github.com/pt/actions), está aplicado automaticamente à qualquer nova *Pull Request*, tanto a verificação de estilização do `Eslint` quanto a verificação de atendimento aos testes unitários. Não permitindo assim o *merge* de código sem a devida padronização ou com bugs evitáveis.
+
+---
+
+## **DEPLOYMENT NO HEROKU**   :earth_americas:
 
 O deployment da aplicação foi realizado utilizando a plataforma `Heroku`. Para tal, utilizou-se a *stack* de `containers` da plataforma, permitindo assim a definição e uso do `Dockerfile` a ser realizado o *build* de nossa aplicação.
 
@@ -150,9 +183,11 @@ As informações sensíveis e definições de acesso ao banco de dados de produ�
 
 O banco de dados selecionado para o *deployment* foi o `PostgreSQL`, através da plataforma `Supabase`. A seleção foi devido à facilidade de uso da plataforma e considerável performance utilizando o servidor da América do Sul (São Paulo, capital).
 
-Devido ao *deployment* em modalidade *free*, o `Heroku` realiza o chamado *idling*, ou hibernação em tradução livre. Assim, após um período de inatividade da aplicação (sem requisições), ela é colocada neste estado hibernativo. A próxima requisição feita terá que aguardar a inicialização do serviço novamente. Causando um * delay* que, normalmente, é curto e quase imperceptível. Porém, em testes próprios ao longo do desenvolvimento, esse delay causou *crashs* e necessitou o recarregamento do navegador ou do `Postman`. 
+Devido ao *deployment* em modalidade *free*, o `Heroku` realiza o chamado *idling*, ou hibernação em tradução livre. Assim, após um período de inatividade da aplicação (sem requisições), ela é colocada neste estado hibernativo. A próxima requisição feita terá que aguardar a inicialização do serviço novamente. Causando um * delay* que, normalmente, é curto e quase imperceptível. Porém, em testes próprios ao longo do desenvolvimento, esse delay causou *crashs* e necessitou o recarregamento do navegador ou do `Postman`.
 
-## **CASE TÉCNICO XP** :office:
+---
+
+## **CASE TÉCNICO XP**   :office:
 
 ### **Considerações**
 
