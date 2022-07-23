@@ -10,9 +10,12 @@ import Cliente from '../../../src/database/models/clientes.model';
 import jwtUtils from '../../../src/utils/jwt.util';
 import bcryptUtils from '../../../src/utils/bcrypt.util';
 
-import { clienteFullMock, clienteGetMock, clientePostMock } from '../../mocks/cliente.mock';
+import {
+  clienteFullMock, clienteGetMock, clientePatchMock, clientePostMock,
+} from '../../mocks/cliente.mock';
 
 const JWT_TOKEN_MOCK = 'jwt-token-mock';
+const HASHED_SENHA_MOCK = 'hashed-senha-mock';
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
@@ -22,6 +25,7 @@ describe('Service "Clientes":', () => {
   let findOneStub: SinonStub;
   let createStub: SinonStub;
   let updateStub: SinonStub;
+  let bcryptHashStub: SinonStub;
   let bcryptCompareStub: SinonStub;
   let jwtGenerateTokenStub: SinonStub;
 
@@ -30,6 +34,7 @@ describe('Service "Clientes":', () => {
     findOneStub = stub(Cliente, 'findOne');
     createStub = stub(Cliente, 'create');
     updateStub = stub(Cliente, 'update');
+    bcryptHashStub = stub(bcryptUtils, 'hashPassword');
     bcryptCompareStub = stub(bcryptUtils, 'comparePassword');
     jwtGenerateTokenStub = stub(jwtUtils, 'generateToken');
   });
@@ -39,6 +44,8 @@ describe('Service "Clientes":', () => {
     findOneStub.restore();
     createStub.restore();
     updateStub.restore();
+    bcryptHashStub.restore();
+    bcryptCompareStub.restore();
     jwtGenerateTokenStub.restore();
   });
 
@@ -65,7 +72,7 @@ describe('Service "Clientes":', () => {
       let cliente: ICliente;
 
       before(async () => {
-        findByPkStub.resolves(clienteGetMock as Cliente);
+        findByPkStub.resolves(clienteGetMock);
         cliente = await clientesService.getByCod(1);
       });
 
@@ -92,7 +99,7 @@ describe('Service "Clientes":', () => {
   describe('method "create" should', () => {
     describe('when the investor is already registered', () => {
       before(() => {
-        findOneStub.resolves(clienteGetMock as Cliente);
+        findOneStub.resolves(clienteGetMock);
       });
 
       after(() => {
@@ -110,7 +117,8 @@ describe('Service "Clientes":', () => {
 
       before(async () => {
         findOneStub.resolves(null);
-        createStub.resolves(clienteFullMock as Cliente);
+        createStub.resolves(clienteFullMock);
+        bcryptHashStub.returns(HASHED_SENHA_MOCK);
         jwtGenerateTokenStub.returns(JWT_TOKEN_MOCK);
         token = await clientesService.create(clientePostMock);
       });
@@ -118,6 +126,7 @@ describe('Service "Clientes":', () => {
       after(() => {
         findOneStub.reset();
         createStub.reset();
+        bcryptHashStub.reset();
         jwtGenerateTokenStub.reset();
       });
 
@@ -131,6 +140,57 @@ describe('Service "Clientes":', () => {
 
       it('return a string', () => {
         expect(token).to.be.an('string');
+      });
+    });
+  });
+
+  describe('method "editProfile" should', () => {
+    describe('when the email is already registered', () => {
+      before(() => {
+        findByPkStub.resolves(clienteGetMock);
+        findOneStub.resolves(clienteGetMock);
+      });
+
+      after(() => {
+        findByPkStub.reset();
+        findOneStub.reset();
+      });
+
+      it('throw an error with the message "Cadastro inválido"', async () => (
+        expect(clientesService.create(clientePatchMock))
+          .to.eventually.be.rejected.and.have.property('message', 'Cadastro inválido')
+      ));
+    });
+
+    describe('when the email isn\'t inside the patch or isn\'t registered yet', () => {
+      let cliente: ICliente;
+
+      before(async () => {
+        findByPkStub.resolves(clienteGetMock);
+        findOneStub.resolves(null);
+        bcryptHashStub.returns(HASHED_SENHA_MOCK);
+        cliente = await clientesService.editProfile(1, clientePatchMock);
+      });
+
+      after(() => {
+        findByPkStub.reset();
+        findOneStub.reset();
+        bcryptHashStub.reset();
+        updateStub.reset();
+      });
+
+      it('call the Cliente.update once', () => {
+        expect(updateStub.calledOnce).to.be.true;
+      });
+
+      it('return an object', () => {
+        expect(cliente).to.be.an('object');
+      });
+
+      it('return an object with the follow properties: "codCliente", "nome", "email" and "saldo"', () => {
+        ['codCliente', 'nome', 'email', 'saldo'].forEach((property) => {
+          expect(cliente).to.have.property(property);
+        });
       });
     });
   });
@@ -153,7 +213,7 @@ describe('Service "Clientes":', () => {
 
     describe('when investor is registered but password is wrong', () => {
       before(async () => {
-        findOneStub.resolves(clienteFullMock as Cliente);
+        findOneStub.resolves(clienteFullMock);
       });
 
       after(() => {
@@ -170,7 +230,7 @@ describe('Service "Clientes":', () => {
       let token: string;
 
       before(async () => {
-        findOneStub.resolves(clienteFullMock as Cliente);
+        findOneStub.resolves(clienteFullMock);
         bcryptCompareStub.resolves(true);
         jwtGenerateTokenStub.returns(JWT_TOKEN_MOCK);
         token = await clientesService.authenticate(clientePostMock);
@@ -212,7 +272,7 @@ describe('Service "Clientes":', () => {
 
     describe('when the investor is registered', () => {
       before(async () => {
-        findByPkStub.resolves(clienteGetMock as Cliente);
+        findByPkStub.resolves(clienteGetMock);
         await clientesService.updateSaldo(1, NEW_SALDO);
       });
 

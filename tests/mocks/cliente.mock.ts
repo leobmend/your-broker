@@ -11,6 +11,12 @@ export const clientePostMock = {
   senha: 'test-password',
 };
 
+export const clientePatchMock = {
+  nome: 'Jhon Jack Doe',
+  email: 'test@test.com',
+  senha: 'test-password',
+};
+
 export const clienteFullMock = {
   codCliente: 1,
   nome: 'John DOe',

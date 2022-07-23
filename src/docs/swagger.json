@@ -10,7 +10,7 @@
   },
   "servers": [
     { "url": "https://your-broker.herokuapp.com/", "description": "Produção Heroku" },
-    { "url": "https://localhost:3001/", "description": "Desenvolvimento local" }
+    { "url": "http://localhost:3001/", "description": "Desenvolvimento local" }
   ],
   "paths": {
     "/credenciais/cadastrar": {
@@ -214,6 +214,57 @@
             "description": "Cliente não autorizado"
           }
         }
+      },
+      "patch": {
+        "summary": "Edita as informações do cliente",
+        "description": "Rota responsável pela edição das informações do cliente. A rota recebe no mínimo um dos três items a seguir: 'nome', 'email' e 'senha'. Retornando o cliente atualizado.",
+        "tags": ["Clientes"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { 
+            "in": "path",
+            "name": "codCliente",
+            "description": "Código do cliente",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Edição Cliente"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Busca realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/Cliente"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Cliente não autorizado"
+          },
+          "400": {
+            "description": "Edição inválida"
+          }
+        }
       }
     },
     "/clientes/{codCliente}/investimentos": {
@@ -233,6 +284,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Novo Cliente"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Busca realizada com sucesso",
@@ -474,10 +535,12 @@
           "senha": "123123"
         }
       },
-      "Login": {
+      "Edição Cliente": {
         "type": "object",
-        "required": ["email", "senha"],
         "properties": {
+          "nome": {
+            "type": "string"
+          },
           "email": {
             "type": "string"
           },
@@ -486,6 +549,7 @@
           }
         },
         "example": {
+          "nome": "John Doe",
           "email": "john@test.com",
           "senha": "123123"
         }
@@ -511,6 +575,22 @@
           "nome": "John Doe",
           "email": "john@test.com",
           "saldo": 11111.11
+        }
+      },
+      "Login": {
+        "type": "object",
+        "required": ["email", "senha"],
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "senha": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "email": "john@test.com",
+          "senha": "123123"
         }
       },
       "Ativo": {
