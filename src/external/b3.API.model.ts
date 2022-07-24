@@ -6,7 +6,7 @@ import {
 import ativosBackup from './ativos.backup';
 
 const MAX_STOCK = 1000000;
-const TIMEOUT_MILISEC = 10000;
+const TIMEOUT_MILISEC = 7500;
 
 const b3API: AxiosInstance = axios.create({
   baseURL: 'https://api-cotacao-b3.labdo.it/api',
@@ -37,6 +37,7 @@ export const getCotacao = async (codAtivo: string): Promise<IGetCotacaoReturn | 
     })
     .catch((err) => {
       console.log(err.message);
-      return { codAtivo: 'GENERIC', valor: 10 + Math.floor(Math.random() * 10) };
+      const randomValue = Number((3 + Math.random() * 20 + Math.random()).toFixed(2));
+      return { codAtivo: 'GENERIC', valor: randomValue };
     })
 );
