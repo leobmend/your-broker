@@ -16,6 +16,7 @@ Todo o desenvolvimento do código foi feito utilizando o `Docker` para garantir 
 
 > [Documentação Técnica da API em Produção](https://your-broker.herokuapp.com/docs)
 
+> [Aplicação Front-end para apresentação das funcionalidades básicas da API](https://your-broker-front.herokuapp.com/) e seu [repositório GitHub](https://github.com/leobmend/your-broker-front)
 ---
 
 ## **MODELAGEM DO BANCO DE DADOS**   :open_file_folder:
@@ -48,11 +49,13 @@ Assim, não faz sentido armazenar este dado, mas sim consumí-lo de uma API exte
 
 Como sinalizado anteriormente, o valor dos ativos apresenta o desafio de ser apresentado atualizado. Para isso, tentando equilibrar usabilidade e veracidade das informações, foi escolhido a [API-Cotacao-B3](https://api-cotacao-b3.labdo.it/), construída e mantida pelo [LABDO.IT](https://labdo.it), para fins não comerciais.
 
-Ela apresenta documentação autoexplicativa e sua base de informações é sólida, pois essa é obtida diretamente das bolsas de valores dos ativos que realiza o monitoramento. No entando, ela apresenta os dados das cotações dos ativos com um delay usual de 1 dia útil.
+Ela apresenta documentação autoexplicativa e sua base de informações é sólida, pois essa é obtida diretamente das bolsas de valores dos ativos que realiza o monitoramento. No entando, ela apresenta os dados das cotações dos ativos com um delay usual de 1 dia útil. Como valor da cotação a ser utilizado, foi escolhido o valor do fechamento do pregão. Assim, dentre as possibilidades, mantém-se a maior autenticidade da informação.
 
 Para consumir as informações da API, foi utilizado a biblioteca `Axios`, realizando requisições do tipo `GET` e tratando o resultado conforme necessário. 
 
-Como valor da cotação a ser utilizado, foi escolhido o valor do fechamento do pregão. Assim, dentre as possibilidades, mantém-se a maior autenticidade da informação.
+Devido a não ser uma API para fins comerciais, ocorre em alguns momentos de grande tráfego, a falha das requisições retornando um código 429 (*too many requests*). Logo, como medida paleativa para não parasilar a API nestes momentos, foi optado pela definição de um *timeout* de 7500 (sete mil e quinhetos) milisegundos nas requisições. E, caso esse tempo seja atingido, é utilizado arbitrariamente como valor da cotação um valor decimal (2 casas) entre R$3,00 e R$21,00.
+
+Como ponto de melhoria futura, é necessário analisar outras opções de APIs para consumir tal informação.
 
 ---
 
