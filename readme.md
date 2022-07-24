@@ -103,7 +103,7 @@ Assim, o front-end pode acessar informações para criar uma página de perfil c
 
 Na requisição desta rota, é necessário que o *header* possua o token JWT em *bearer format*. Além da autenticação do token verificando sua expiração e validade, também é feito a checagem chamada de **autorização do cliente**. Nessa checagem é permitido o prosseguimento da requisição para resposta se, e somente se, o parâmetro `codCliente` proveniente da url for idêntico ao existente dentro do *payload* do token. Evitando que um cliente visualize informações de outro cliente.
 
-Caso seja necessário a edição das informações do cliente, a rota `PUT /clientes/{codCliente}` pode ser utilizada. Ela recebe um dos três parâmetros a seguir pelo corpo da requisição: *nome*, *email* e *senha*. Após validações dos valores informados, é feita a atualização e retornado as informações completas atualizadas do cliente.
+Caso seja necessário a edição das informações do cliente, a rota `PUT /clientes/{codCliente}` pode ser utilizada. Ela recebe no mínimo um dos três parâmetros a seguir pelo corpo da requisição: *nome*, *email* e *senha*. Após validações dos valores informados, é feita a atualização e retornado as informações completas atualizadas do cliente.
 
 ### **Transações**
 

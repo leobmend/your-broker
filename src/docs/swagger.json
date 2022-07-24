@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Your Broker API",
-    "description": "API RESTful que simula o funcionamento de uma corretora de investimentos",
+    "description": "API RESTful que simula o funcionamento de uma corretora de investimentos. \n\n Para apresentação visual da API em funcionamento, é possível acessar um front-end com funcionalidades básicas, neste [endereço](https://your-broker-front.herokuapp.com). \n\n Repositório do GitHub disponível [aqui](https://github.com/leobmend).",
     "contact": {
       "email": "leo.bmendonca@gmail.com"
     },
